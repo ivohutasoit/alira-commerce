@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{{ template "header.tmpl.html" }}
+		<title>Alira Commerce * Admin Log In</title>
+		<link rel="stylesheet" href="/static/form-login.css" >
+	</head>
+	<body class="text-center">
+		<form class="form-login" method="POST" action="/">
+			<h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
+			<label class="sr-only" for="userid">User ID</label>
+			<input class="form-control" type="text" id="userid" name="userid" placeholder="username, email, mobile" autocomplete="false" autofocus/>
+			<label class="sr-only" for="password">Password</label>
+			<input class="form-control" type="password" id="password" name="password" placeholder="password" autofocus/>
+			<div class="text-left">
+				<label class="pull-left checkbox-inline"><input type="checkbox"> Remember me</label>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+			<div class="clearfix mb-4">
+				<div class="text-right">
+					<a href="#" class="pull-right">Forgot Password?</a>
+				</div>
+			</div> 
+			<a class="btn btn-sm btn-outline-success btn-block" href="#">Create an account</a>
+		</form>
+
+		{{ template "footer.tmpl.html" }}
+	</body>
+</html>

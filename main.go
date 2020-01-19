@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
+
+	"github.com/ivohutasoit/alira-commerce/route"
 
 	"github.com/joho/godotenv"
 
@@ -26,9 +27,8 @@ func main() {
 	router.LoadHTMLGlob("views/*/*.tmpl.html")
 	router.Static("/static", "static")
 
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	})
+	web := &route.WebRoute{}
+	web.Initialize(router)
 
 	router.Run(":" + port)
 }
