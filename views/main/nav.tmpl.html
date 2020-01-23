@@ -7,10 +7,10 @@
       <input class="form-control mr-sm-1" type="search" placeholder="Search" aria-label="Search">
     </form>
     <div class="navbar-nav mr-auto">
-      <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+      <a id="home" class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       {{ if .userid }}
-      <a class="nav-item nav-link" href="/application">Application</a>
-      <a class="nav-item nav-link" href="/customer">Customer</a>
+      <a id="application" class="nav-item nav-link" href="/application">Application</a>
+      <a id="customer" class="nav-item nav-link" href="/customer">Customer</a>
       {{ end }}
       <!--<a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>-->
     </div>

@@ -15,5 +15,11 @@ func (route *WebRoute) Initialize(r *gin.Engine) {
 		webIndex := web.Group("/")
 		webIndex.GET("", index.Get)
 		webIndex.POST("", index.Post)
+
+		customer := &controller.CustomerController{}
+		customerWeb := web.Group("/customer")
+		{
+			customerWeb.GET("", customer.SearchHandler)
+		}
 	}
 }
