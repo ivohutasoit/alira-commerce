@@ -4,12 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ivohutasoit/alira/model/domain"
 )
 
 type IndexController struct{}
 
 func (ctrl *IndexController) Get(c *gin.Context) {
-	c.HTML(http.StatusOK, "login.tmpl.html", nil)
+	c.HTML(http.StatusOK, "dashboard.tmpl.html", domain.Page)
 }
 
 func (ctrl *IndexController) Post(c *gin.Context) {
