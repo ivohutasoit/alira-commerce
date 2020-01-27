@@ -7,8 +7,9 @@ function setActiveNavlink(page) {
             currentPageLink.classList.remove("active")
         }
     }*/
-    if (!page) page = "home";
-    var link = document.getElementById(page);
+    console.log(view)
+    if (!view) view = "home";
+    var link = document.getElementById(view);
     if (link) {
         link.classList.add("active");
         //sessionStorage.setItem("page", page);

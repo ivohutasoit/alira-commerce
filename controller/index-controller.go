@@ -10,5 +10,6 @@ import (
 type IndexController struct{}
 
 func (ctrl *IndexController) Get(c *gin.Context) {
+	domain.Page["page"] = ""
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", domain.Page)
 }

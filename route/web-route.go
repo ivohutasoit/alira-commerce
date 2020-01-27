@@ -21,6 +21,8 @@ func (route *WebRoute) Initialize(r *gin.Engine) {
 		customerWeb := web.Group("/customer")
 		{
 			customerWeb.GET("", customer.SearchHandler)
+			customerWeb.GET("/action", customer.ActionHandler)
+			customerWeb.POST("/action", customer.ActionHandler)
 		}
 	}
 }

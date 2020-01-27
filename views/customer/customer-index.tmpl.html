@@ -6,9 +6,98 @@
 	</head>
 	<body>
         {{ template "nav.tmpl.html" . }}
-        <div class="text-center">
-            Hello customer list
-        </div>
+        <div class="container mt-4">
+			<div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+						<form method="POST" accept="/customer">
+							<div class="form-row">
+								<label for="name" class="col-sm-2 col-form-label">ID</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control form-control-sm" id="code" placeholder="Customer Registration ID">
+								</div>
+							</div>
+							<div class="form-row">
+								<label for="name" class="col-sm-2 col-form-label">Name</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control form-control-sm" id="name" placeholder="Customer Name">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row py-3">
+						<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+							<a type="button" class="btn btn-primary" href="/customer/action?name=create"><i class="zmdi zmdi-account-add zmdi-hc-lg"></i> New</a>
+							<button type="button" class="btn btn-warning text-light" ><i class="zmdi zmdi-refresh-sync zmdi-hc-lg"></i> Refresh</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			{{ $paginator := .data }}
+			{{ $records := $paginator.Records }}
+			<table class="table table-sm table-bordered table-striped table-hover">
+				<thead class="text-center">
+					<tr>
+					<th scope="col">Customer ID</th>
+					<th scope="col">Name</th>
+					<th scope="col">Email</th>
+					<th scope="col">Status</th>
+					<th scope="col">Payment</th>
+					<th scope="col">Action</th>
+					</tr>
+				</thead>
+					<tbody>
+						{{ range $record := $records }}
+						<tr>
+							<td class="text-center"><a href="/customer/action?name=detail&code={{ $record.ID }}">{{ $record.Code }}</a></td>
+							<td>{{ $record.Name }}</td>
+							<td>{{ $record.Email }}</td>
+							<td>{{ $record.Status }}</td>
+							<td>{{ if eq $record.Payment true }} Enabled {{ else }} Disabled {{ end }}</td>
+							<td></td>
+						</tr>
+						{{ end }}
+					</tbody>
+			</table>
+			<div class="row">
+				<div class="col-sm-4 offset-sm-8">
+					<div class="input-group input-group-sm flex-nowrap">
+						<div class="input-group-prepend" id="button-addon3">
+							<button class="btn btn-outline-secondary" type="button" onclick="doChangePage('first', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')"><i class="zmdi zmdi-skip-previous"></i> First</button>
+							<button class="btn btn-outline-secondary" type="button" onclick="doChangePage('prev', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')"><i class="zmdi zmdi-fast-rewind"></i> Prev</button>
+						</div>
+						<input type="number" class="form-control text-center" value="{{ $paginator.CurrentPage }}" aria-label="Example text with two button addons" aria-describedby="button-addon3">
+						<div class="input-group-append" id="button-addon4">
+							<span class="input-group-text" id="addon-wrapping">/ {{ $paginator.TotalPage }} pages</span>
+							<button class="btn btn-outline-secondary" type="button" onclick="doChangePage('next', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')">Next <i class="zmdi zmdi-fast-forward"></i></button>
+							<button class="btn btn-outline-secondary" type="button" onclick="doChangePage('last', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')">Last <i class="zmdi zmdi-skip-next"></i></button>
+						  </div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
 		{{ template "footer.tmpl.html" .}}
+		<script>
+			function doChangePage(evt, total, current) {
+				if (evt == 'next') {
+					if (total > current) {
+						current++;
+					}
+				} else if (evt == 'last') {
+					current = total;
+				} else if (evt == "prev") {
+					if (1 < current) {
+						current--;
+					}
+				} else {
+					current = 1;
+				}
+				window.location = "http://localhost:9001/customer?page=" + current;
+			}
+		</script>
     </body>
 </html>
