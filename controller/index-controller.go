@@ -4,16 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ivohutasoit/alira/model/domain"
 )
 
 type IndexController struct{}
 
 func (ctrl *IndexController) Get(c *gin.Context) {
-	c.HTML(http.StatusOK, "login.tmpl.html", nil)
-}
-
-func (ctrl *IndexController) Post(c *gin.Context) {
-	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
-		"userid": "1",
-	})
+	domain.Page["page"] = ""
+	c.HTML(http.StatusOK, "dashboard.tmpl.html", domain.Page)
 }
