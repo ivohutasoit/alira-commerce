@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ivohutasoit/alira/model"
+	"github.com/ivohutasoit/alira/model/commerce"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/ivohutasoit/alira-commerce/route"
@@ -13,6 +16,14 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/heroku/x/hmetrics/onload"
 )
+
+func init() {
+	model.GetDatabase().Debug().AutoMigrate(&commerce.Customer{},
+		&commerce.Store{},
+		&commerce.Product{},
+		&commerce.StoreProduct{},
+		&commerce.StoreProductPrice{})
+}
 
 func main() {
 	err := godotenv.Load()
