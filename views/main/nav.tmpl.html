@@ -9,7 +9,7 @@
     <div class="navbar-nav mr-auto">
       <a id="home" class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       {{ if .user_id }}
-      <a id="application" class="nav-item nav-link" href="/application">Application</a>
+      <!--<a id="application" class="nav-item nav-link" href="/application">Application</a>-->
       <a id="customer" class="nav-item nav-link" href="/customer">Customer</a>
       {{ end }}
       <!--<a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>-->
@@ -19,8 +19,9 @@
       <li class="nav-item dropdown ml-auto">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{ .username }} </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/profile"><span class="glyphicon glyphicon-book"></span> My Profile</a>
-          <a class="dropdown-item" href="{{ .url_logout }}"><span class="glyphicon glyphicon-book"></span> Logout</a>
+          <a class="dropdown-item" href="/profile"><span class="glyphicon glyphicon-book"></span> User Settings</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{{ .url_logout }}"> Logout</a>
         </div>
       </li>
       {{ else }}
