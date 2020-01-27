@@ -36,7 +36,7 @@
 										</button>
 									</div>
 									{{ end }}
-									<form method="POST" action="/customer/action?name=create">
+									<form method="POST" action="/customer/action?name=create" autocomplete="off">
 										<div class="form-group row">
 											<label for="name" class="col-sm-2 col-form-label">ID</label>
 											<div class="col-sm-5">
@@ -66,7 +66,7 @@
 										<div class="form-group row">
 											<label for="name" class="col-sm-2 col-form-label">Contact</label>
 											<div class="col-sm-5">
-												<input type="text" class="form-control" id="email" name="email" placeholder="Email Address" required>
+												<input type="email" class="form-control" id="email" name="email" placeholder="Email Address" required>
 											</div>
 											<div class="col-sm-5">
 												<div class="input-group">

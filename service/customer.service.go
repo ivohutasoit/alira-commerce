@@ -23,6 +23,48 @@ import (
 
 type CustomerService struct{}
 
+func (s *CustomerService) Get(args ...interface{}) (map[interface{}]interface{}, error) {
+	if len(args) < 2 {
+		return nil, errors.New("not enough parameter")
+	}
+	token, _ := args[0].(string)
+	id, _ := args[1].(string)
+	customer := &commerce.Customer{}
+	alira.GetDatabase().Where("id = ?", id).First(&customer)
+	if customer.BaseModel.ID == "" {
+		return nil, errors.New("invalid customer")
+	}
+
+	req, err := http.NewRequest("GET",
+		fmt.Sprintf("http://localhost:9000/api/alpha/account/%s", customer.UserID), nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	client := &http.Client{Timeout: time.Second * 10}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	var response domain.Response
+	json.Unmarshal(body, &response)
+	if response.Code != http.StatusOK {
+		return nil, errors.New(response.Error)
+	}
+
+	return map[interface{}]interface{}{
+		"customer": customer,
+		"profile":  response.Data,
+	}, nil
+}
+
 func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface{}, error) {
 	if len(args) < 1 {
 		return nil, errors.New("not enough parameter")
@@ -120,7 +162,7 @@ func (s *CustomerService) Search(args ...interface{}) (map[interface{}]interface
 	var customers []commerce.Customer
 	token, _ := args[0].(string)
 	page, _ := strconv.Atoi(args[1].(string))
-	limit, _ := strconv.Atoi("3")
+	limit, _ := strconv.Atoi("5")
 	if len(args) == 2 {
 		paginator := util.Initialize(&util.Parameter{
 			Database: alira.GetDatabase().Where("status = ?", "ACTIVE"),
@@ -155,7 +197,6 @@ func (s *CustomerService) Search(args ...interface{}) (map[interface{}]interface
 			if response.Code != http.StatusOK {
 				return nil, errors.New(response.Error)
 			}
-			fmt.Println(response.Data)
 			records = append(records, model.CustomerRecord{
 				ID:       v.BaseModel.ID,
 				Code:     v.Code,

@@ -6,6 +6,61 @@
     </head>
     <body>
         {{ template "nav.tmpl.html" .}}
+        <div class="container">
+            <div class="row py-3">
+                <div class="col-md-6 py-3 border">
+                    <h4 class="pb-2">Main Information</h4>
+                    <div class="form-row">
+                        <label for="name" class="col-sm-3 col-form-label">Customer ID:</label>
+                        <div class="col-sm-5">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .customer.Code }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="name" class="col-sm-3 col-form-label">Name:</label>
+                        <div class="col-sm-5">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.name }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="name" class="col-sm-3 col-form-label">Username:</label>
+                        <div class="col-sm-4">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@{{ .profile.username }}">
+                        </div>
+                        <div class="col-sm-4 align-bottom">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" value="1" id="login" name="login" disabled>
+                                <label class="form-check-label" for="login">
+                                    Can Login?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="name" class="col-sm-3 col-form-label">Contact:</label>
+                        <div class="col-sm-5">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.email }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-sm-5 offset-md-3">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="+62{{ .profile.mobile }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-sm-5 offset-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="payment" name="payment" disabled {{ if eq .customer.Payment true}} checked {{ end }}>
+                                <label class="form-check-label" for="payment">
+                                    Enable Payment
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 py-3"></div>
+            </div>
+        </div>
         {{ template "footer.tmpl.html" .}}
     </body>
 </html>

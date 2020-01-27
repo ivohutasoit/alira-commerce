@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ivohutasoit/alira/model/commerce"
+
 	"github.com/gin-contrib/sessions"
 
 	"github.com/ivohutasoit/alira/util"
@@ -19,15 +21,32 @@ type CustomerController struct{}
 
 func (ctrl *CustomerController) DetailHandler(c *gin.Context) {
 	domain.Page["view"] = "customer"
-	code := c.Query("code")
-	if c.Request.Method == http.MethodGet {
-		domain.Page["message"] = nil
-		domain.Page["error"] = nil
-		domain.Page["code"] = code
+	id := c.Query("id")
+	session := sessions.Default(c)
 
-		c.HTML(http.StatusOK, "customer-detail.tmpl.html", domain.Page)
+	customerService := &service.CustomerService{}
+	data, err := customerService.Get(session.Get("access_token"), id)
+	api := strings.Contains(c.Request.URL.Path, os.Getenv("URL_API"))
+	if err != nil {
+		if api {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"code":   http.StatusBadRequest,
+				"status": http.StatusText(http.StatusBadRequest),
+				"error":  err.Error(),
+			})
+		} else {
+			domain.Page["error"] = err.Error()
+			c.HTML(http.StatusOK, "customer-index.tmpl.html", domain.Page)
+		}
 		return
 	}
+
+	if api {
+		return
+	}
+	domain.Page["customer"] = data["customer"].(*commerce.Customer)
+	domain.Page["profile"] = data["profile"]
+	c.HTML(http.StatusOK, "customer-detail.tmpl.html", domain.Page)
 }
 
 func (ctrl *CustomerController) SearchHandler(c *gin.Context) {
