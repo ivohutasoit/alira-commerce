@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/ivohutasoit/alira-commerce/model"
-
 	"github.com/ivohutasoit/alira/model/domain"
 
 	"github.com/ivohutasoit/alira/util"
@@ -34,9 +33,14 @@ func (s *CustomerService) Get(args ...interface{}) (map[interface{}]interface{},
 	if customer.BaseModel.ID == "" {
 		return nil, errors.New("invalid customer")
 	}
+	custUser := &commerce.CustomerUser{}
+	alira.GetDatabase().Where("customer_id = ? AND role = ?", id, "OWNER").First(&custUser)
+	if custUser.BaseModel.ID == "" {
+		return nil, errors.New("invalid customer")
+	}
 
 	req, err := http.NewRequest("GET",
-		fmt.Sprintf("http://localhost:9000/api/alpha/account/%s", customer.UserID), nil)
+		fmt.Sprintf("http://localhost:9000/api/alpha/account/%s", custUser.UserID), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -111,6 +115,12 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 	if customer.BaseModel.ID != "" {
 		return nil, errors.New("customer id has been used")
 	}
+	customer = &commerce.Customer{
+		Code:    code,
+		Status:  "ACTIVE",
+		Payment: payment,
+	}
+	alira.GetDatabase().Create(&customer)
 
 	data := map[string]string{
 		"username":   username,
@@ -138,44 +148,54 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 		return nil, err
 	}
 	var response domain.Response
-	json.Unmarshal(body, &response)
+	if err := json.Unmarshal(body, &response); err != nil {
+		return nil, err
+	}
+
 	if response.Code != http.StatusCreated {
 		return nil, errors.New(response.Error)
 	}
 
-	customer = &commerce.Customer{
-		UserID:  response.Data["user_id"],
-		Code:    code,
-		Status:  "ACTIVE",
-		Payment: payment,
+	var user domain.User
+	if err := json.Unmarshal([]byte(response.Data), &user); err != nil {
+		return nil, err
 	}
-	alira.GetDatabase().Create(&customer)
+
+	custUser := &commerce.CustomerUser{
+		CustomerID: customer.BaseModel.ID,
+		UserID:     user.BaseModel.ID,
+		Role:       "OWNER",
+	}
+	alira.GetDatabase().Create(&custUser)
 
 	return map[interface{}]interface{}{
 		"status":   "SUCCESS",
 		"message":  "Customer has been created",
 		"customer": customer,
+		"owner":    custUser,
 	}, nil
 }
 
 func (s *CustomerService) Search(args ...interface{}) (map[interface{}]interface{}, error) {
-	var customers []commerce.Customer
+	var customers, count []model.CustomerProfile
 	token, _ := args[0].(string)
 	page, _ := strconv.Atoi(args[1].(string))
 	limit, _ := strconv.Atoi("5")
 	if len(args) == 2 {
-		paginator := util.Initialize(&util.Parameter{
-			Database: alira.GetDatabase().Where("status = ?", "ACTIVE"),
+		paginator := util.NewPaginator(&util.PaginatorParameter{
+			Database: alira.GetDatabase().Table("customers c").Select("c.id, c.code, c.status, c.payment, cu.user_id").Joins("JOIN customer_users cu ON cu.customer_id=c.id AND cu.role='OWNER'"),
+			Count:    &count,
 			Page:     page,
 			Limit:    limit,
 			Result:   &customers,
-			OrderBy:  []string{"code"},
+			OrderBy:  []string{"c.code"},
 			ShowSQL:  true,
 		})
-		records := make([]model.CustomerRecord, 0)
-		for _, v := range customers {
+		//fmt.Println(paginator)
+		temp := make([]model.CustomerProfile, 0)
+		for _, customer := range customers {
 			req, err := http.NewRequest("GET",
-				fmt.Sprintf("http://localhost:9000/api/alpha/account/%s", v.UserID), nil)
+				fmt.Sprintf("http://localhost:9000/api/alpha/account/%s", customer.UserID), nil)
 			if err != nil {
 				return nil, err
 			}
@@ -193,22 +213,19 @@ func (s *CustomerService) Search(args ...interface{}) (map[interface{}]interface
 				return nil, err
 			}
 			var response domain.Response
-			json.Unmarshal(body, &response)
+			if err := json.Unmarshal(body, &response); err != nil {
+				return nil, err
+			}
+
 			if response.Code != http.StatusOK {
 				return nil, errors.New(response.Error)
 			}
-			records = append(records, model.CustomerRecord{
-				ID:       v.BaseModel.ID,
-				Code:     v.Code,
-				Status:   v.Status,
-				Payment:  v.Payment,
-				Name:     response.Data["name"],
-				Email:    response.Data["email"],
-				Mobile:   response.Data["mobile"],
-				Username: response.Data["username"],
-			})
+			if err := json.Unmarshal([]byte(response.Data), &customer); err != nil {
+				return nil, errors.New(response.Error)
+			}
+			temp = append(temp, customer)
 		}
-		paginator.Records = records
+		paginator.Records = temp
 		return map[interface{}]interface{}{
 			"status":    "SUCCESS",
 			"paginator": paginator,
