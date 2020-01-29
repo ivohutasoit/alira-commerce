@@ -122,12 +122,13 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 	}
 	alira.GetDatabase().Create(&customer)
 
-	data := map[string]string{
+	data := map[string]interface{}{
 		"username":   username,
 		"email":      email,
 		"mobile":     mobile,
 		"first_name": firstName,
 		"last_name":  lastName,
+		"active": true,
 	}
 	payload, _ := json.Marshal(data)
 	req, err := http.NewRequest("POST", "http://localhost:9000/api/alpha/account", bytes.NewBuffer(payload))

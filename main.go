@@ -19,6 +19,7 @@ import (
 
 func init() {
 	model.GetDatabase().Debug().AutoMigrate(&commerce.Customer{},
+		&commerce.CustomerUser{},
 		&commerce.Store{},
 		&commerce.Product{},
 		&commerce.StoreProduct{},
