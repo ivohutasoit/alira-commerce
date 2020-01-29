@@ -5,22 +5,17 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ivohutasoit/alira/model/commerce"
-
 	"github.com/gin-contrib/sessions"
-
-	"github.com/ivohutasoit/alira/util"
-
-	"github.com/ivohutasoit/alira-commerce/service"
-
 	"github.com/gin-gonic/gin"
-	"github.com/ivohutasoit/alira/model/domain"
+	"github.com/ivohutasoit/alira-commerce/service"
+	"github.com/ivohutasoit/alira/model/commerce"
+	"github.com/ivohutasoit/alira/util"
 )
 
 type CustomerController struct{}
 
 func (ctrl *CustomerController) DetailHandler(c *gin.Context) {
-	domain.Page["view"] = "customer"
+	alira.ViewData["view"] = "customer"
 	id := c.Query("id")
 	session := sessions.Default(c)
 
@@ -35,8 +30,8 @@ func (ctrl *CustomerController) DetailHandler(c *gin.Context) {
 				"error":  err.Error(),
 			})
 		} else {
-			domain.Page["error"] = err.Error()
-			c.HTML(http.StatusOK, "customer-index.tmpl.html", domain.Page)
+			alira.ViewData["error"] = err.Error()
+			c.HTML(http.StatusOK, "customer-index.tmpl.html", alira.ViewData)
 		}
 		return
 	}
@@ -44,30 +39,30 @@ func (ctrl *CustomerController) DetailHandler(c *gin.Context) {
 	if api {
 		return
 	}
-	domain.Page["customer"] = data["customer"].(*commerce.Customer)
-	domain.Page["profile"] = data["profile"]
-	c.HTML(http.StatusOK, "customer-detail.tmpl.html", domain.Page)
+	alira.ViewData["customer"] = data["customer"].(*commerce.Customer)
+	alira.ViewData["profile"] = data["profile"]
+	c.HTML(http.StatusOK, "customer-detail.tmpl.html", alira.ViewData)
 }
 
 func (ctrl *CustomerController) SearchHandler(c *gin.Context) {
-	domain.Page["view"] = "customer"
+	alira.ViewData["view"] = "customer"
 	page := c.DefaultQuery("page", "1")
 	api := strings.Contains(c.Request.URL.Path, os.Getenv("URL_API"))
 	session := sessions.Default(c)
 
 	customerService := &service.CustomerService{}
 	if c.Request.Method == http.MethodGet {
-		domain.Page["message"] = nil
+		alira.ViewData["message"] = nil
 		data, err := customerService.Search(session.Get("access_token"), page)
 		if err != nil {
-			domain.Page["data"] = nil
-			domain.Page["error"] = err.Error()
+			alira.ViewData["data"] = nil
+			alira.ViewData["error"] = err.Error()
 		} else {
-			domain.Page["error"] = nil
+			alira.ViewData["error"] = nil
 			paginator := data["paginator"].(*util.Paginator)
-			domain.Page["data"] = paginator
+			alira.ViewData["data"] = paginator
 		}
-		c.HTML(http.StatusOK, "customer-index.tmpl.html", domain.Page)
+		c.HTML(http.StatusOK, "customer-index.tmpl.html", alira.ViewData)
 		return
 	}
 
@@ -89,8 +84,8 @@ func (ctrl *CustomerController) SearchHandler(c *gin.Context) {
 		}
 	} else {
 		if err := c.ShouldBind(&req); err != nil {
-			domain.Page["error"] = err.Error()
-			c.HTML(http.StatusBadRequest, "customer-index.tmpl.html", domain.Page)
+			alira.ViewData["error"] = err.Error()
+			c.HTML(http.StatusBadRequest, "customer-index.tmpl.html", alira.ViewData)
 			return
 		}
 	}
@@ -110,8 +105,8 @@ func (ctrl *CustomerController) ActionHandler(c *gin.Context) {
 
 func (ctrl *CustomerController) CreateHandler(c *gin.Context) {
 	if c.Request.Method == http.MethodGet {
-		domain.Page["view"] = "customer"
-		c.HTML(http.StatusOK, "customer-create.tmpl.html", domain.Page)
+		alira.ViewData["view"] = "customer"
+		c.HTML(http.StatusOK, "customer-create.tmpl.html", alira.ViewData)
 		return
 	}
 
@@ -138,10 +133,10 @@ func (ctrl *CustomerController) CreateHandler(c *gin.Context) {
 		}
 	} else {
 		if err := c.ShouldBind(&req); err != nil {
-			domain.Page["view"] = "customer"
-			domain.Page["message"] = nil
-			domain.Page["error"] = err.Error()
-			c.HTML(http.StatusBadRequest, "customer-create.tmpl.html", domain.Page)
+			alira.ViewData["view"] = "customer"
+			alira.ViewData["message"] = nil
+			alira.ViewData["error"] = err.Error()
+			c.HTML(http.StatusBadRequest, "customer-create.tmpl.html", alira.ViewData)
 			return
 		}
 	}
@@ -159,16 +154,16 @@ func (ctrl *CustomerController) CreateHandler(c *gin.Context) {
 			})
 			return
 		} else {
-			domain.Page["view"] = "customer"
-			domain.Page["message"] = nil
-			domain.Page["error"] = err.Error()
-			c.HTML(http.StatusBadRequest, "customer-create.tmpl.html", domain.Page)
+			alira.ViewData["view"] = "customer"
+			alira.ViewData["message"] = nil
+			alira.ViewData["error"] = err.Error()
+			c.HTML(http.StatusBadRequest, "customer-create.tmpl.html", alira.ViewData)
 			return
 		}
 	}
 
-	domain.Page["view"] = "customer"
-	domain.Page["message"] = data["message"].(string)
-	domain.Page["error"] = nil
-	c.HTML(http.StatusCreated, "customer-create.tmpl.html", domain.Page)
+	alira.ViewData["view"] = "customer"
+	alira.ViewData["message"] = data["message"].(string)
+	alira.ViewData["error"] = nil
+	c.HTML(http.StatusCreated, "customer-create.tmpl.html", alira.ViewData)
 }

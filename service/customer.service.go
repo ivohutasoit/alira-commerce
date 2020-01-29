@@ -12,12 +12,9 @@ import (
 	"time"
 
 	"github.com/ivohutasoit/alira-commerce/model"
-	"github.com/ivohutasoit/alira/model/domain"
-
-	"github.com/ivohutasoit/alira/util"
-
-	alira "github.com/ivohutasoit/alira/model"
 	"github.com/ivohutasoit/alira/model/commerce"
+	"github.com/ivohutasoit/alira/model/domain"
+	"github.com/ivohutasoit/alira/util"
 )
 
 type CustomerService struct{}
@@ -29,12 +26,12 @@ func (s *CustomerService) Get(args ...interface{}) (map[interface{}]interface{},
 	token, _ := args[0].(string)
 	id, _ := args[1].(string)
 	customer := &commerce.Customer{}
-	alira.GetDatabase().Where("id = ?", id).First(&customer)
+	alira.GetConnection().Where("id = ?", id).First(&customer)
 	if customer.BaseModel.ID == "" {
 		return nil, errors.New("invalid customer")
 	}
 	custUser := &commerce.CustomerUser{}
-	alira.GetDatabase().Where("customer_id = ? AND role = ?", id, "OWNER").First(&custUser)
+	alira.GetConnection().Where("customer_id = ? AND role = ?", id, "OWNER").First(&custUser)
 	if custUser.BaseModel.ID == "" {
 		return nil, errors.New("invalid customer")
 	}
@@ -111,7 +108,7 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 	}
 
 	customer := &commerce.Customer{}
-	alira.GetDatabase().Where("code = ?", code).First(customer)
+	alira.GetConnection().Where("code = ?", code).First(customer)
 	if customer.BaseModel.ID != "" {
 		return nil, errors.New("customer id has been used")
 	}
@@ -120,7 +117,7 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 		Status:  "ACTIVE",
 		Payment: payment,
 	}
-	alira.GetDatabase().Create(&customer)
+	alira.GetConnection().Create(&customer)
 
 	data := map[string]interface{}{
 		"username":   username,
@@ -128,7 +125,7 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 		"mobile":     mobile,
 		"first_name": firstName,
 		"last_name":  lastName,
-		"active": true,
+		"active":     true,
 	}
 	payload, _ := json.Marshal(data)
 	req, err := http.NewRequest("POST", "http://localhost:9000/api/alpha/account", bytes.NewBuffer(payload))
@@ -167,7 +164,7 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 		UserID:     user.BaseModel.ID,
 		Role:       "OWNER",
 	}
-	alira.GetDatabase().Create(&custUser)
+	alira.GetConnection().Create(&custUser)
 
 	return map[interface{}]interface{}{
 		"status":   "SUCCESS",
@@ -184,7 +181,7 @@ func (s *CustomerService) Search(args ...interface{}) (map[interface{}]interface
 	limit, _ := strconv.Atoi("5")
 	if len(args) == 2 {
 		paginator := util.NewPaginator(&util.PaginatorParameter{
-			Database: alira.GetDatabase().Table("customers c").Select("c.id, c.code, c.status, c.payment, cu.user_id").Joins("JOIN customer_users cu ON cu.customer_id=c.id AND cu.role='OWNER'"),
+			Database: alira.GetConnection().Table("customers c").Select("c.id, c.code, c.status, c.payment, cu.user_id").Joins("JOIN customer_users cu ON cu.customer_id=c.id AND cu.role='OWNER'"),
 			Count:    &count,
 			Page:     page,
 			Limit:    limit,
