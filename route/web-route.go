@@ -1,23 +1,23 @@
 package route
 
 import (
-	"github.com/ivohutasoit/alira-commerce/controller"
-	"github.com/ivohutasoit/alira/middleware"
-
 	"github.com/gin-gonic/gin"
+	"github.com/ivohutasoit/alira-commerce/controller"
+	"github.com/ivohutasoit/alira-commerce/middleware"
 )
 
 type WebRoute struct{}
 
 func (route *WebRoute) Initialize(r *gin.Engine) {
+	authMiddleware := &middleware.Auth{}
 	web := r.Group("")
-	web.Use(middleware.SessionHeaderRequired())
+	web.Use(authMiddleware.SessionRequired())
 	{
-		index := &controller.IndexController{}
+		index := &controller.Index{}
 		webIndex := web.Group("/")
 		webIndex.GET("", index.Get)
 
-		customer := &controller.CustomerController{}
+		customer := &controller.Customer{}
 		customerWeb := web.Group("/customer")
 		{
 			customerWeb.GET("", customer.SearchHandler)

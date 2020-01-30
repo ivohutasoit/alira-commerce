@@ -4,21 +4,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ivohutasoit/alira/model"
-	"github.com/ivohutasoit/alira/model/commerce"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
-	"github.com/ivohutasoit/alira-commerce/route"
-
-	"github.com/joho/godotenv"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/heroku/x/hmetrics/onload"
+	"github.com/ivohutasoit/alira"
+	"github.com/ivohutasoit/alira-commerce/route"
+	"github.com/ivohutasoit/alira/database/commerce"
+	"github.com/joho/godotenv"
 )
 
 func init() {
-	model.GetDatabase().Debug().AutoMigrate(&commerce.Customer{},
+	alira.GetConnection().Debug().AutoMigrate(&commerce.Customer{},
 		&commerce.CustomerUser{},
 		&commerce.Store{},
 		&commerce.Product{},
@@ -29,12 +26,12 @@ func init() {
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		fmt.Println("error loading .env file")
+		fmt.Println("eror loading .env file")
 	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		fmt.Println("$PORT must be set")
+		fmt.Println("$ORT must be set")
 	}
 	router := gin.New()
 	router.Use(gin.Logger())

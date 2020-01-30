@@ -11,15 +11,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ivohutasoit/alira"
 	"github.com/ivohutasoit/alira-commerce/model"
-	"github.com/ivohutasoit/alira/model/commerce"
-	"github.com/ivohutasoit/alira/model/domain"
+	"github.com/ivohutasoit/alira/database/commerce"
+	"github.com/ivohutasoit/alira/messaging"
 	"github.com/ivohutasoit/alira/util"
 )
 
-type CustomerService struct{}
+type Customer struct{}
 
-func (s *CustomerService) Get(args ...interface{}) (map[interface{}]interface{}, error) {
+func (s *Customer) Get(args ...interface{}) (map[interface{}]interface{}, error) {
 	if len(args) < 2 {
 		return nil, errors.New("not enough parameter")
 	}
@@ -27,12 +28,12 @@ func (s *CustomerService) Get(args ...interface{}) (map[interface{}]interface{},
 	id, _ := args[1].(string)
 	customer := &commerce.Customer{}
 	alira.GetConnection().Where("id = ?", id).First(&customer)
-	if customer.BaseModel.ID == "" {
+	if customer.Model.ID == "" {
 		return nil, errors.New("invalid customer")
 	}
 	custUser := &commerce.CustomerUser{}
 	alira.GetConnection().Where("customer_id = ? AND role = ?", id, "OWNER").First(&custUser)
-	if custUser.BaseModel.ID == "" {
+	if custUser.Model.ID == "" {
 		return nil, errors.New("invalid customer")
 	}
 
@@ -54,19 +55,17 @@ func (s *CustomerService) Get(args ...interface{}) (map[interface{}]interface{},
 	if err != nil {
 		return nil, err
 	}
-	var response domain.Response
-	json.Unmarshal(body, &response)
-	if response.Code != http.StatusOK {
-		return nil, errors.New(response.Error)
-	}
+	var userProfile messaging.UserProfile
+	parser := &util.Parser{}
+	parser.UnmarshalResponse(body, http.StatusOK, &userProfile)
 
 	return map[interface{}]interface{}{
 		"customer": customer,
-		"profile":  response.Data,
+		"profile":  userProfile,
 	}, nil
 }
 
-func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface{}, error) {
+func (s *Customer) Create(args ...interface{}) (map[interface{}]interface{}, error) {
 	if len(args) < 1 {
 		return nil, errors.New("not enough parameter")
 	}
@@ -109,7 +108,7 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 
 	customer := &commerce.Customer{}
 	alira.GetConnection().Where("code = ?", code).First(customer)
-	if customer.BaseModel.ID != "" {
+	if customer.Model.ID != "" {
 		return nil, errors.New("customer id has been used")
 	}
 	customer = &commerce.Customer{
@@ -117,7 +116,6 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 		Status:  "ACTIVE",
 		Payment: payment,
 	}
-	alira.GetConnection().Create(&customer)
 
 	data := map[string]interface{}{
 		"username":   username,
@@ -145,23 +143,15 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 	if err != nil {
 		return nil, err
 	}
-	var response domain.Response
-	if err := json.Unmarshal(body, &response); err != nil {
-		return nil, err
-	}
+	var userProfile messaging.UserProfile
 
-	if response.Code != http.StatusCreated {
-		return nil, errors.New(response.Error)
-	}
+	parser := &util.Parser{}
+	parser.UnmarshalResponse(body, http.StatusCreated, &userProfile)
 
-	var user domain.User
-	if err := json.Unmarshal([]byte(response.Data), &user); err != nil {
-		return nil, err
-	}
-
+	alira.GetConnection().Create(&customer)
 	custUser := &commerce.CustomerUser{
-		CustomerID: customer.BaseModel.ID,
-		UserID:     user.BaseModel.ID,
+		CustomerID: customer.Model.ID,
+		UserID:     userProfile.ID,
 		Role:       "OWNER",
 	}
 	alira.GetConnection().Create(&custUser)
@@ -174,7 +164,7 @@ func (s *CustomerService) Create(args ...interface{}) (map[interface{}]interface
 	}, nil
 }
 
-func (s *CustomerService) Search(args ...interface{}) (map[interface{}]interface{}, error) {
+func (s *Customer) Search(args ...interface{}) (map[interface{}]interface{}, error) {
 	var customers, count []model.CustomerProfile
 	token, _ := args[0].(string)
 	page, _ := strconv.Atoi(args[1].(string))
@@ -192,6 +182,7 @@ func (s *CustomerService) Search(args ...interface{}) (map[interface{}]interface
 		//fmt.Println(paginator)
 		temp := make([]model.CustomerProfile, 0)
 		for _, customer := range customers {
+			fmt.Println(customer.UserID)
 			req, err := http.NewRequest("GET",
 				fmt.Sprintf("http://localhost:9000/api/alpha/account/%s", customer.UserID), nil)
 			if err != nil {
@@ -210,17 +201,17 @@ func (s *CustomerService) Search(args ...interface{}) (map[interface{}]interface
 			if err != nil {
 				return nil, err
 			}
-			var response domain.Response
-			if err := json.Unmarshal(body, &response); err != nil {
-				return nil, err
-			}
+			var userProfile messaging.UserProfile
 
-			if response.Code != http.StatusOK {
-				return nil, errors.New(response.Error)
-			}
-			if err := json.Unmarshal([]byte(response.Data), &customer); err != nil {
-				return nil, errors.New(response.Error)
-			}
+			parser := &util.Parser{}
+			parser.UnmarshalResponse(body, http.StatusOK, &userProfile)
+
+			customer.UserID = userProfile.ID
+			customer.Username = userProfile.Username
+			customer.Email = userProfile.Email
+			customer.Mobile = userProfile.PrimaryMobile
+			customer.Name = fmt.Sprintf("%s %s", userProfile.FirstName, userProfile.LastName)
+
 			temp = append(temp, customer)
 		}
 		paginator.Records = temp

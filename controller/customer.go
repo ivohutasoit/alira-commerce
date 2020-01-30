@@ -7,20 +7,21 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/ivohutasoit/alira"
 	"github.com/ivohutasoit/alira-commerce/service"
-	"github.com/ivohutasoit/alira/model/commerce"
+	"github.com/ivohutasoit/alira/database/commerce"
 	"github.com/ivohutasoit/alira/util"
 )
 
-type CustomerController struct{}
+type Customer struct{}
 
-func (ctrl *CustomerController) DetailHandler(c *gin.Context) {
+func (ctrl *Customer) DetailHandler(c *gin.Context) {
 	alira.ViewData["view"] = "customer"
 	id := c.Query("id")
 	session := sessions.Default(c)
 
-	customerService := &service.CustomerService{}
-	data, err := customerService.Get(session.Get("access_token"), id)
+	cs := &service.Customer{}
+	data, err := cs.Get(session.Get("access_token"), id)
 	api := strings.Contains(c.Request.URL.Path, os.Getenv("URL_API"))
 	if err != nil {
 		if api {
@@ -44,16 +45,16 @@ func (ctrl *CustomerController) DetailHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "customer-detail.tmpl.html", alira.ViewData)
 }
 
-func (ctrl *CustomerController) SearchHandler(c *gin.Context) {
+func (ctrl *Customer) SearchHandler(c *gin.Context) {
 	alira.ViewData["view"] = "customer"
 	page := c.DefaultQuery("page", "1")
 	api := strings.Contains(c.Request.URL.Path, os.Getenv("URL_API"))
 	session := sessions.Default(c)
 
-	customerService := &service.CustomerService{}
+	cs := &service.Customer{}
 	if c.Request.Method == http.MethodGet {
 		alira.ViewData["message"] = nil
-		data, err := customerService.Search(session.Get("access_token"), page)
+		data, err := cs.Search(session.Get("access_token"), page)
 		if err != nil {
 			alira.ViewData["data"] = nil
 			alira.ViewData["error"] = err.Error()
@@ -91,7 +92,7 @@ func (ctrl *CustomerController) SearchHandler(c *gin.Context) {
 	}
 }
 
-func (ctrl *CustomerController) ActionHandler(c *gin.Context) {
+func (ctrl *Customer) ActionHandler(c *gin.Context) {
 	name := c.DefaultQuery("name", "create")
 	switch name {
 	case "detail":
@@ -103,7 +104,7 @@ func (ctrl *CustomerController) ActionHandler(c *gin.Context) {
 	}
 }
 
-func (ctrl *CustomerController) CreateHandler(c *gin.Context) {
+func (ctrl *Customer) CreateHandler(c *gin.Context) {
 	if c.Request.Method == http.MethodGet {
 		alira.ViewData["view"] = "customer"
 		c.HTML(http.StatusOK, "customer-create.tmpl.html", alira.ViewData)
@@ -141,9 +142,9 @@ func (ctrl *CustomerController) CreateHandler(c *gin.Context) {
 		}
 	}
 
-	customerService := &service.CustomerService{}
+	cs := &service.Customer{}
 	session := sessions.Default(c)
-	data, err := customerService.Create(req.Code, req.Username, req.Email, req.Mobile,
+	data, err := cs.Create(req.Code, req.Username, req.Email, req.Mobile,
 		req.FirstName, req.LastName, req.Payment, session.Get("access_token"))
 	if err != nil {
 		if api {

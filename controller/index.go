@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ivohutasoit/alira"
 )
 
-type IndexController struct{}
+type Index struct{}
 
-func (ctrl *IndexController) Get(c *gin.Context) {
-	alira.ViewData["page"] = ""
+func (ctrl *Index) Get(c *gin.Context) {
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", alira.ViewData)
 }

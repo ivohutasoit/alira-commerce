@@ -2,12 +2,12 @@
 <html lang="en">
     <head>
         {{ template "header.tmpl.html" }}
-        <title>Alira Commerce * Detail {{ .code }}</title>
+        <title>Alira Commerce * Detail {{ .customer.Code }}</title>
     </head>
     <body>
         {{ template "nav.tmpl.html" .}}
         <div class="container">
-            <div class="row py-3">
+            <div class="row py-2">
                 <div class="col-md-6 py-3 border">
                     <h4 class="pb-2">Main Information</h4>
                     <div class="form-row">
@@ -19,13 +19,13 @@
                     <div class="form-row">
                         <label for="name" class="col-sm-3 col-form-label">Name:</label>
                         <div class="col-sm-5">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.name }}">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.FirstName }} {{ .profile.LastName }}">
                         </div>
                     </div>
                     <div class="form-row">
                         <label for="name" class="col-sm-3 col-form-label">Username:</label>
                         <div class="col-sm-4">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@{{ .profile.username }}">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@{{ .profile.Username }}">
                         </div>
                         <div class="col-sm-4 align-bottom">
                             <div class="form-check form-check-inline">
@@ -39,12 +39,12 @@
                     <div class="form-row">
                         <label for="name" class="col-sm-3 col-form-label">Contact:</label>
                         <div class="col-sm-5">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.email }}">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.Email }}">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-sm-5 offset-md-3">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="+62{{ .profile.mobile }}">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.PrimaryMobile }}">
                         </div>
                     </div>
                     <div class="form-row">
