@@ -6,59 +6,94 @@
     </head>
     <body>
         {{ template "nav.tmpl.html" .}}
-        <div class="container">
-            <div class="row py-2">
-                <div class="col-md-6 py-3 border">
-                    <h4 class="pb-2">Main Information</h4>
-                    <div class="form-row">
-                        <label for="name" class="col-sm-3 col-form-label">Customer ID:</label>
-                        <div class="col-sm-5">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .customer.Code }}">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <label for="name" class="col-sm-3 col-form-label">Name:</label>
-                        <div class="col-sm-5">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.FirstName }} {{ .profile.LastName }}">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <label for="name" class="col-sm-3 col-form-label">Username:</label>
-                        <div class="col-sm-4">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@{{ .profile.Username }}">
-                        </div>
-                        <div class="col-sm-4 align-bottom">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" value="1" id="login" name="login" disabled>
-                                <label class="form-check-label" for="login">
-                                    Can Login?
-                                </label>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="card">
+                        <h5 class="card-header"><i class="zmdi zmdi-store zmdi-hc-lg text-success"></i> Main Information</h5>
+                        <div class="card-body text-right">
+                            <div class="form-row">
+                                <label for="name" class="col-sm-3 col-form-label">Customer ID:</label>
+                                <div class="col-sm-5">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .customer.Code }}">
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <label for="name" class="col-sm-3 col-form-label">Contact:</label>
-                        <div class="col-sm-5">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.Email }}">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-sm-5 offset-md-3">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.PrimaryMobile }}">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-sm-5 offset-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="1" id="payment" name="payment" disabled {{ if eq .customer.Payment true}} checked {{ end }}>
-                                <label class="form-check-label" for="payment">
-                                    Enable Payment
-                                </label>
+                            <div class="form-row">
+                                <label for="name" class="col-sm-3 col-form-label">Name:</label>
+                                <div class="col-sm-5">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.FirstName }} {{ .profile.LastName }}">
+                                </div>
                             </div>
+                            <div class="form-row">
+                                <label for="name" class="col-sm-3 col-form-label">Owner User:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@{{ .profile.Username }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" value="1" id="login" name="login" disabled>
+                                        <label class="form-check-label" for="login">
+                                            Can Login?
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label for="name" class="col-sm-3 col-form-label">Contact:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.Email }}">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-sm-9 offset-md-3">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.PrimaryMobile }}">
+                                </div>
+                            </div>
+                            <div class="form-row text-left">
+                                <div class="col-sm-4 offset-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="1" id="payment" name="payment" disabled {{ if eq .customer.Payment true}} checked {{ end }}>
+                                        <label class="form-check-label" for="payment">
+                                            Payment
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn btn-sm btn-outline-primary pull-right">Enable Log In</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 py-3"></div>
+                <div class="col-md-7">
+                    <div class="card">
+                        <h5 class="card-header bg-transparent">Store List</h5>
+                        <div class="card-body">
+                            <div class="btn-toolbar" role="toolbar" aria-label="toolbar">
+                                <div class="btn-group btn-group-sm mr-2" role="group" aria-label="First group">
+                                    <a type="button" class="btn btn-sm btn-primary" href="/store/action?name=create&customer={{ .customer.ID }}"><i class="zmdi zmdi-plus"></i> New</a>
+                                </div>
+                                <table class="table table-sm table-bordered table-striped table-hover mt-2">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Address</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <td class="text-center"><a class="text-decoration-none" href="/store/action?name=detail&id=1">Store Name</a></td>
+                                        <td style="max-width: 200px;">Address with long description will be covered by table column. Then is should be multiline to show all</td>
+                                        <td class="text-center"><span class="badge badge-success">Open</span></td>
+                                        <td class="text-center">
+                                            <a class="btn btn-sm btn-outline-light text-warning" title="Edit" data-toggle="tooltip"><i class="zmdi zmdi-edit"></i></a>
+                                            <a class="btn btn-sm btn-outline-light text-danger" title="Delete" data-toggle="tooltip"><i class="zmdi zmdi-delete"></i></a>
+                                        </td>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                      </div>
+                </div>
             </div>
         </div>
         {{ template "footer.tmpl.html" .}}
