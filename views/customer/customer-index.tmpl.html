@@ -32,6 +32,7 @@
 			</div>
 			{{ $paginator := .data }}
 			{{ $records := $paginator.Records }}
+			{{ $length := len $records }}
 			<table class="table table-sm table-bordered table-striped table-hover mt-2">
 				<thead class="text-center">
 					<tr>
@@ -44,6 +45,7 @@
 					</tr>
 				</thead>
 				<tbody>
+				{{ if gt $length 0 }}
 					{{ range $record := $records }}
 					<tr>
 						<td class="text-center"><a class="text-decoration-none" href="/customer/action?name=detail&id={{ $record.ID }}">{{ $record.Code }}</a></td>
@@ -61,24 +63,33 @@
 						</td>
 					</tr>
 					{{ end }}
+				{{ else }}
+					<tr>
+						<td colspan="6" class="text-center font-weight-lighter font-italic text-danger">No data to display</td>
+					</tr>
+				{{ end }}
 				</tbody>
 			</table>
-			<div class="row justify-content-end">
-				<div class="col-md-4">
+			{{ if gt $paginator.TotalPage 0}}
+			<div class="d-flex justify-content-end">
+				<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+					<div class="btn-group btn-group-sm" role="group" aria-label="First group">
+						<button class="btn btn-outline-secondary" type="button" onclick="doChangePage('first', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')"><i class="zmdi zmdi-skip-previous"></i> First</button>
+						<button class="btn btn-outline-secondary rounded-0" type="button" onclick="doChangePage('prev', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')"><i class="zmdi zmdi-fast-rewind"></i> Prev</button>
+					</div>
 					<div class="input-group input-group-sm">
-						<div class="input-group-prepend" id="button-addon3">
-							<button class="btn btn-outline-secondary" type="button" onclick="doChangePage('first', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')"><i class="zmdi zmdi-skip-previous"></i> First</button>
-							<button class="btn btn-outline-secondary" type="button" onclick="doChangePage('prev', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')"><i class="zmdi zmdi-fast-rewind"></i> Prev</button>
+						<input type="text" class="form-control text-center rounded-0" style="flex: none;width: 55px;" value="{{ $paginator.CurrentPage }}" aria-describedby="basic-addon2">
+						<div class="input-group-append">
+							<span class="input-group-text text-center rounded-0" style="width: 55px;" id="basic-addon2">of {{ $paginator.TotalPage }}</span>
 						</div>
-						<input type="number" class="form-control text-center vw-50" value="{{ $paginator.CurrentPage }}" aria-label="Example text with two button addons" aria-describedby="button-addon3">
-						<div class="input-group-append" id="button-addon4">
-							<span class="input-group-text" id="addon-wrapping">/ {{ $paginator.TotalPage }} pages</span>
-							<button class="btn btn-outline-secondary" type="button" onclick="doChangePage('next', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')">Next <i class="zmdi zmdi-fast-forward"></i></button>
-							<button class="btn btn-outline-secondary" type="button" onclick="doChangePage('last', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')">Last <i class="zmdi zmdi-skip-next"></i></button>
-						</div>
+					</div>
+					<div class="btn-group btn-group-sm" role="group" aria-label="Second group">
+						<button class="btn btn-outline-secondary rounded-0" type="button" onclick="doChangePage('next', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')">Next <i class="zmdi zmdi-fast-forward"></i></button>
+						<button class="btn btn-outline-secondary" type="button" onclick="doChangePage('last', '{{ $paginator.TotalPage }}', '{{ $paginator.CurrentPage }}')">Last <i class="zmdi zmdi-skip-next"></i></button>
 					</div>
 				</div>
 			</div>
+			{{ end }}
 		</main>
 		</div>
 		{{ template "footer.tmpl.html" .}}
