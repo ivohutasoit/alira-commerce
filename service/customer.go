@@ -59,9 +59,17 @@ func (s *Customer) Get(args ...interface{}) (map[interface{}]interface{}, error)
 	parser := &util.Parser{}
 	parser.UnmarshalResponse(body, http.StatusOK, &userProfile)
 
+	ss := &Store{}
+
+	data, err := ss.Search("customer", customer.ID)
+	if err != nil {
+		return nil, err
+	}
+
 	return map[interface{}]interface{}{
 		"customer": customer,
 		"profile":  userProfile,
+		"stores":   data["stores"],
 	}, nil
 }
 

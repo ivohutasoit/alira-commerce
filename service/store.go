@@ -1,5 +1,12 @@
 package service
 
+import (
+	"errors"
+
+	"github.com/ivohutasoit/alira"
+	"github.com/ivohutasoit/alira/database/commerce"
+)
+
 type Store struct{}
 
 func (s *Store) Search(args ...interface{}) (map[interface{}]interface{}, error) {
@@ -12,9 +19,13 @@ func (s *Store) Search(args ...interface{}) (map[interface{}]interface{}, error)
 	}
 	var stores []commerce.Store
 	switch findBy {
+	case "customer":
+		alira.GetConnection().Where("customer_id = ?", args[1].(string)).Find(&stores)
 	default:
-		
+		alira.GetConnection().Find(&stores)
 	}
 
-	return nil, nil
+	return map[interface{}]interface{}{
+		"stores": stores,
+	}, nil
 }

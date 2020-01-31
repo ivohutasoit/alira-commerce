@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ivohutasoit/alira"
 	"github.com/ivohutasoit/alira-commerce/service"
-	"github.com/ivohutasoit/alira/database/commerce"
 	"github.com/ivohutasoit/alira/util"
 )
 
@@ -40,8 +39,9 @@ func (ctrl *Customer) DetailHandler(c *gin.Context) {
 	if api {
 		return
 	}
-	alira.ViewData["customer"] = data["customer"].(*commerce.Customer)
+	alira.ViewData["customer"] = data["customer"]
 	alira.ViewData["profile"] = data["profile"]
+	alira.ViewData["stores"] = data["stores"]
 	c.HTML(http.StatusOK, "customer-detail.tmpl.html", alira.ViewData)
 }
 
