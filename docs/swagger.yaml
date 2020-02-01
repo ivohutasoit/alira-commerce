@@ -1,0 +1,79 @@
+basePath: /api/alpha
+definitions:
+  controller.Login:
+    properties:
+      user_id:
+        type: string
+    required:
+    - user_id
+    type: object
+host: localhost:9001
+info:
+  contact:
+    email: hello@alira.com
+    name: Alira Support
+    url: https://www.commerce.alira.com/support
+  description: Documentation of Alira commerce provides capability to manage customer
+    store, inventory and sales order
+  license:
+    name: GNU General Public License v3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  termsOfService: https://commerce.alira.com/terms/
+  title: Alira Commerce API
+  version: alpha
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Handler user authentication
+      parameters:
+      - description: Login request
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Log in user
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Handler log out authenticated user
+      parameters:
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Log out authenticated user
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

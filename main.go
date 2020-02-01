@@ -23,6 +23,20 @@ func init() {
 		&commerce.StoreProductPrice{})
 }
 
+// @title Alira Commerce API
+// @version alpha
+// @description Documentation of Alira commerce provides capability to manage customer store, inventory and sales order
+// @termsOfService https://commerce.alira.com/terms/
+
+// @contact.name Alira Support
+// @contact.url https://www.commerce.alira.com/support
+// @contact.email hello@alira.com
+
+// @license.name GNU General Public License v3.0
+// @license.url https://www.gnu.org/licenses/gpl-3.0.en.html
+
+// @host localhost:9001
+// @BasePath /api/alpha
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -41,8 +55,11 @@ func main() {
 	router.LoadHTMLGlob("views/*/*.tmpl.html")
 	router.Static("/static", "static")
 
-	web := &route.WebRoute{}
+	web := &route.Web{}
 	web.Initialize(router)
+
+	api := &route.Api{}
+	api.Initialize(router)
 
 	router.Run(":" + port)
 }
