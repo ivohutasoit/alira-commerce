@@ -1,18 +1,8 @@
 package model
 
-type CustomerRecord struct {
-	ID       string
-	Code     string
-	Name     string
-	Username string
-	Email    string
-	Mobile   string
-	Status   string
-	Payment  bool
-}
 
 type CustomerProfile struct {
-	ID        string
+	ID        string `json:"id" bson:"id"`
 	UserID    string `json:"user_id" bson:"user_id"`
 	Code      string
 	FirstName string
@@ -23,4 +13,11 @@ type CustomerProfile struct {
 	Mobile    string `json:"mobile" bson:"mobile"`
 	Status    string
 	Payment   bool
+}
+
+type CustomerStore struct {
+	ID string
+	Name string
+	Address string
+	Status string
 }

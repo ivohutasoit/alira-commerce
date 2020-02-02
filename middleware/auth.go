@@ -113,7 +113,6 @@ func (m *Auth) SessionRequired(args ...interface{}) gin.HandlerFunc {
 					c.Abort()
 					return
 				}
-
 				var userProfile messaging.UserProfile
 				parser := &util.Parser{}
 				parser.UnmarshalResponse(respData, http.StatusOK, &userProfile)

@@ -1,10 +1,27 @@
 basePath: /api/alpha
 definitions:
-  controller.Login:
+  model.Login:
     properties:
       user_id:
         type: string
     required:
+    - user_id
+    type: object
+  model.Pin:
+    properties:
+      code:
+        type: string
+    required:
+    - code
+    type: object
+  model.Token:
+    properties:
+      token:
+        type: string
+      user_id:
+        type: string
+    required:
+    - token
     - user_id
     type: object
 host: localhost:9001
@@ -28,12 +45,12 @@ paths:
       - application/json
       description: Handler user authentication
       parameters:
-      - description: Login request
+      - description: Login Request
         in: body
         name: login
         required: true
         schema:
-          $ref: '#/definitions/controller.Login'
+          $ref: '#/definitions/model.Login'
       produces:
       - application/json
       responses:
@@ -71,9 +88,106 @@ paths:
           schema:
             type: string
       summary: Log out authenticated user
-securityDefinitions:
-  ApiKeyAuth:
-    in: header
-    name: Authorization
-    type: apiKey
+  /auth/token:
+    post:
+      consumes:
+      - application/json
+      description: Authentication token verification handler
+      parameters:
+      - description: Authentication Token
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/model.Token'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Verify token
+  /store:
+    get:
+      consumes:
+      - application/json
+      description: Find store based on parameter
+      parameters:
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Search Store
+    post:
+      consumes:
+      - application/json
+      description: Find store based on parameter
+      parameters:
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Search Store
+  /user/pin:
+    post:
+      consumes:
+      - application/json
+      description: Update authenticated user pin
+      parameters:
+      - description: User pin
+        in: body
+        name: pin
+        required: true
+        schema:
+          $ref: '#/definitions/model.Pin'
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Change user pin
 swagger: "2.0"

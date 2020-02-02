@@ -19,7 +19,13 @@ func (route *Api) Initialize(r *gin.Engine) {
 		authApi := api.Group("/auth")
 		{
 			authApi.POST("/login", auth.LoginHandler)
+			authApi.POST("/token", auth.TokenHandler)
 			authApi.POST("/logout", auth.LogoutHandler)
+		}
+		user := &controller.User{}
+		userApi := api.Group("/user")
+		{
+			userApi.POST("/pin", user.PinHandler)
 		}
 	}
 }

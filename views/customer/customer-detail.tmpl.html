@@ -64,23 +64,32 @@
                     </div>
                 </div>
                 <div class="col-md-7">
-                    <div class="card">
-                        <h5 class="card-header bg-transparent">Store List</h5>
-                        <div class="card-body">
+                    <nav class="nav nav-pills" id="pills-tab" role="tablist">
+                        <a class="nav-link active" data-toggle="pill" href="#pills-stores" role="tab" aria-controls="pills-stores" aria-selected="true">Store</a>
+                        <a class="nav-link" href="#">Product</a>
+                        <a class="nav-link" href="#">Employee</a>
+                    </nav>
+                    <div class="tab-content py-3" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-stores" role="tabpanel" aria-labelledby="pills-home-tab">
                             <div class="btn-toolbar" role="toolbar" aria-label="toolbar">
                                 <div class="btn-group btn-group-sm mr-2" role="group" aria-label="First group">
                                     <a type="button" class="btn btn-sm btn-primary" href="/store/action?name=create&customer={{ .customer.ID }}"><i class="zmdi zmdi-plus"></i> New</a>
                                 </div>
-                                <table class="table table-sm table-bordered table-striped table-hover mt-2">
-                                    <thead class="text-center">
-                                        <tr>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Address</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                            </div>
+                            {{ $stores := .stores }}
+                            {{ $storeCount := len $stores }}
+                            <table class="table table-sm table-bordered table-striped table-hover mt-2">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Address</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {{ if gt $storeCount 0 }}
+                                    <tr>
                                         <td class="text-center"><a class="text-decoration-none" href="/store/action?name=detail&id=1">Store Name</a></td>
                                         <td style="max-width: 200px;">Address with long description will be covered by table column. Then is should be multiline to show all</td>
                                         <td class="text-center"><span class="badge badge-success">Open</span></td>
@@ -88,11 +97,16 @@
                                             <a class="btn btn-sm btn-outline-light text-warning" title="Edit" data-toggle="tooltip"><i class="zmdi zmdi-edit"></i></a>
                                             <a class="btn btn-sm btn-outline-light text-danger" title="Delete" data-toggle="tooltip"><i class="zmdi zmdi-delete"></i></a>
                                         </td>
-                                    </tbody>
-                                </table>
-                            </div>
+                                    </tr>
+                                {{ else }}
+                                    <tr>
+                                        <td colspan="4" class="text-center font-weight-lighter font-italic text-danger">No data to display</td>
+                                    </tr>
+                                {{ end }}
+                                </tbody>
+                            </table>
                         </div>
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>

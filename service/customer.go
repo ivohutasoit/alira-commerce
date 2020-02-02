@@ -7,9 +7,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/ivohutasoit/alira/service"
 
 	"github.com/ivohutasoit/alira"
 	"github.com/ivohutasoit/alira-commerce/model"
@@ -126,12 +129,13 @@ func (s *Customer) Create(args ...interface{}) (map[interface{}]interface{}, err
 	}
 
 	data := map[string]interface{}{
-		"username":   username,
-		"email":      email,
-		"mobile":     mobile,
-		"first_name": firstName,
-		"last_name":  lastName,
-		"active":     true,
+		"username":      username,
+		"email":         email,
+		"mobile":        mobile,
+		"first_name":    firstName,
+		"last_name":     lastName,
+		"active":        false,
+		"customer_user": true,
 	}
 	payload, _ := json.Marshal(data)
 	req, err := http.NewRequest("POST", "http://localhost:9000/api/alpha/account", bytes.NewBuffer(payload))
@@ -158,11 +162,30 @@ func (s *Customer) Create(args ...interface{}) (map[interface{}]interface{}, err
 
 	alira.GetConnection().Create(&customer)
 	custUser := &commerce.CustomerUser{
-		CustomerID: customer.Model.ID,
-		UserID:     userProfile.ID,
-		Role:       "OWNER",
+		CustomerID:    customer.Model.ID,
+		UserID:        userProfile.ID,
+		Username:      username,
+		Email:         email,
+		PrimaryMobile: mobile,
+		Role:          "OWNER",
+		Active:        true,
 	}
 	alira.GetConnection().Create(&custUser)
+
+	mail := &service.Mail{
+		From:     os.Getenv("SMTP_SENDER"),
+		To:       []string{custUser.Email},
+		Subject:  "[Alira] Welcome",
+		Template: "views/mail/welcome.html",
+		Data: map[interface{}]interface{}{
+			"name": fmt.Sprintf("%s %s", userProfile.FirstName, userProfile.LastName),
+		},
+	}
+	ms := &service.MailService{}
+	_, err = ms.Send(mail)
+	if err != nil {
+		return nil, err
+	}
 
 	return map[interface{}]interface{}{
 		"status":   "SUCCESS",

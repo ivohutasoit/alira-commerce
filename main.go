@@ -18,6 +18,7 @@ func init() {
 	alira.GetConnection().Debug().AutoMigrate(&commerce.Customer{},
 		&commerce.CustomerUser{},
 		&commerce.Store{},
+		&commerce.StoreUser{},
 		&commerce.Product{},
 		&commerce.StoreProduct{},
 		&commerce.StoreProductPrice{})
