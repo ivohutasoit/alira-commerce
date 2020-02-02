@@ -113,11 +113,11 @@ paths:
           schema:
             type: string
       summary: Verify token
-  /store:
-    get:
+  /order:
+    post:
       consumes:
       - application/json
-      description: Find store based on parameter
+      description: Create order by store
       parameters:
       - description: Bearer [accessing token]
         in: header
@@ -136,7 +136,167 @@ paths:
           description: '{"code": 400, "status": "Bad request", "error": "Error"}'
           schema:
             type: string
-      summary: Search Store
+      summary: Create order
+  /order/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Detail of order based on id or reference number provided
+      parameters:
+      - description: order id or reference number
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Order detail
+  /order/search:
+    post:
+      consumes:
+      - application/json
+      description: Find order based on customer or store
+      parameters:
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Find orders
+  /product:
+    post:
+      consumes:
+      - application/json
+      description: Create new product based on customer and or store
+      parameters:
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Create new product
+  /product/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Detail of product based on id provided
+      parameters:
+      - description: product id or barcode
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Product information
+  /store:
+    post:
+      consumes:
+      - application/json
+      description: Create new store with using customer id
+      parameters:
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Create new store
+  /store/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Detail of store based on id provided
+      parameters:
+      - description: store id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Store information
+  /store/search:
     post:
       consumes:
       - application/json

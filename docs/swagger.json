@@ -127,8 +127,232 @@
                 }
             }
         },
-        "/store": {
+        "/order": {
+            "post": {
+                "description": "Create order by store",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [accessing token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"status\": \"OK\", \"message\": \"Success\", \"data\": \"data\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"code\": 400, \"status\": \"Bad request\", \"error\": \"Error\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/search": {
+            "post": {
+                "description": "Find order based on customer or store",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Find orders",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [accessing token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"status\": \"OK\", \"message\": \"Success\", \"data\": \"data\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"code\": 400, \"status\": \"Bad request\", \"error\": \"Error\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/{id}": {
             "get": {
+                "description": "Detail of order based on id or reference number provided",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Order detail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "order id or reference number",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer [accessing token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"status\": \"OK\", \"message\": \"Success\", \"data\": \"data\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"code\": 400, \"status\": \"Bad request\", \"error\": \"Error\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/product": {
+            "post": {
+                "description": "Create new product based on customer and or store",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create new product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [accessing token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"status\": \"OK\", \"message\": \"Success\", \"data\": \"data\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"code\": 400, \"status\": \"Bad request\", \"error\": \"Error\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/{id}": {
+            "get": {
+                "description": "Detail of product based on id provided",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Product information",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product id or barcode",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer [accessing token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"status\": \"OK\", \"message\": \"Success\", \"data\": \"data\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"code\": 400, \"status\": \"Bad request\", \"error\": \"Error\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/store": {
+            "post": {
+                "description": "Create new store with using customer id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create new store",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [accessing token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"status\": \"OK\", \"message\": \"Success\", \"data\": \"data\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"code\": 400, \"status\": \"Bad request\", \"error\": \"Error\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/store/search": {
+            "post": {
                 "description": "Find store based on parameter",
                 "consumes": [
                     "application/json"
@@ -160,17 +384,26 @@
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "Find store based on parameter",
+            }
+        },
+        "/store/{id}": {
+            "get": {
+                "description": "Detail of store based on id provided",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Search Store",
+                "summary": "Store information",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "store id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Bearer [accessing token]",
