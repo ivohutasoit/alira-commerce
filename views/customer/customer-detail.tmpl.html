@@ -21,13 +21,13 @@
                             <div class="form-row">
                                 <label for="name" class="col-sm-3 col-form-label">Name:</label>
                                 <div class="col-sm-5">
-                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.FirstName }} {{ .profile.LastName }}">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .customer.FirstName }} {{ .customer.LastName }}">
                                 </div>
                             </div>
                             <div class="form-row">
                                 <label for="name" class="col-sm-3 col-form-label">Owner User:</label>
                                 <div class="col-sm-4">
-                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@{{ .profile.Username }}">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@{{ .customer.Username }}">
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-check form-check-inline">
@@ -41,12 +41,12 @@
                             <div class="form-row">
                                 <label for="name" class="col-sm-3 col-form-label">Contact:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.Email }}">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .customer.Email }}">
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="col-sm-9 offset-md-3">
-                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .profile.PrimaryMobile }}">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .customer.Mobile }}">
                                 </div>
                             </div>
                             <div class="form-row text-left">

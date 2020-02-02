@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ivohutasoit/alira-commerce/model"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/ivohutasoit/alira"
@@ -15,13 +17,21 @@ import (
 type Customer struct{}
 
 func (ctrl *Customer) DetailHandler(c *gin.Context) {
-	alira.ViewData["view"] = "customer"
-	id := c.Query("id")
-	session := sessions.Default(c)
-
-	cs := &service.Customer{}
-	data, err := cs.Get(session.Get("access_token"), id)
 	api := strings.Contains(c.Request.URL.Path, os.Getenv("URL_API"))
+	var id, accessToken string
+
+	if api {
+		id = c.Param("id")
+		tokens := strings.Split(c.Request.Header.Get("Authorization"), " ")
+		accessToken = tokens[1]
+	} else {
+		alira.ViewData["view"] = "customer"
+		id = c.Query("id")
+		session := sessions.Default(c)
+		accessToken = session.Get("access_token").(string)
+	}
+	cs := &service.Customer{}
+	data, err := cs.Get(accessToken, id)
 	if err != nil {
 		if api {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -37,10 +47,17 @@ func (ctrl *Customer) DetailHandler(c *gin.Context) {
 	}
 
 	if api {
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusOK,
+			"status":  http.StatusText(http.StatusOK),
+			"message": "Customer detail",
+			"data": map[string]interface{}{
+				"customer": data["customer"].(*model.CustomerProfile),
+			},
+		})
 		return
 	}
-	alira.ViewData["customer"] = data["customer"]
-	alira.ViewData["profile"] = data["profile"]
+	alira.ViewData["customer"] = data["customer"].(*model.CustomerProfile)
 	alira.ViewData["stores"] = data["stores"]
 	c.HTML(http.StatusOK, "customer-detail.tmpl.html", alira.ViewData)
 }
