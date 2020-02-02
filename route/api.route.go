@@ -27,5 +27,10 @@ func (route *Api) Initialize(r *gin.Engine) {
 		{
 			userApi.POST("/pin", user.PinHandler)
 		}
+		customer := &controller.Customer{}
+		customerApi := api.Group("/customer")
+		{
+			customerApi.GET("/:id", customer.DetailHandler)
+		}
 	}
 }
