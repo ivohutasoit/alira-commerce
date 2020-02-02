@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Alira Commerce</title>
+		<style>
+			.store-badge {
+				overflow: hidden;
+				margin: 4px 0;
+			}
+			.store-badge img{
+				width: 160px;
+				display:inline-block; 
+				margin:-4.0% 0;
+			}
+			@media screen and (max-width:600px) {
+				.store-badge img{
+					margin:-17.0% 0;
+				}
+      }
+		</style>
+	</head>
+	<body>
+		<h2>Welcome to Alira Community</h2>
+		<p>Hi {{ .name }},</p>
+		<div class="welcome-panel">
+			<h4>Congratulation, your account has been created and your registration are almost complete.</h4>
+			<p style="margin: 0;">We're excited to have you get started. First, you need to download <code>Alira Commerce</code> mobile application.</p>
+			<div class="store-badge">
+				<a href="#"><img src="https://freeiconshop.com/wp-content/uploads/edd/google-play-badge.png" alt="Google Play"></a>
+				<a href="#"><img src="https://freeiconshop.com/wp-content/uploads/edd/app-store-badge.png" alt="App Store"></a>
+			</div>
+			<p>You need to login using your registered email address or username.</p>
+			<p>Here your account profile<br/>
+			Email address: {{ .email }}<br/>
+			Username: {{ .username }}</p>
+		</div>
+		<div class="token-panel">
+			<p>If you have any questions, just reply to this email we're always happy to help out.</p>
+			<p><i>You may read our <a href="#">term and condition</a> using our application.</i></p>
+		</div>
+		<footer>
+			<p>Regards, <br/>Alira Support</p>
+		</footer>
+	</body>
+</html>

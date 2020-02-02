@@ -2,10 +2,114 @@
 <html lang="en">
     <head>
         {{ template "header.tmpl.html" }}
-        <title>Alira Commerce * Detail {{ .code }}</title>
+        <title>Alira Commerce * Detail {{ .customer.Code }}</title>
     </head>
     <body>
         {{ template "nav.tmpl.html" .}}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="card">
+                        <h5 class="card-header"><i class="zmdi zmdi-store zmdi-hc-lg text-success"></i> Main Information</h5>
+                        <div class="card-body text-right">
+                            <div class="form-row">
+                                <label for="name" class="col-sm-3 col-form-label">Customer ID:</label>
+                                <div class="col-sm-5">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .customer.Code }}">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label for="name" class="col-sm-3 col-form-label">Name:</label>
+                                <div class="col-sm-5">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .customer.FirstName }} {{ .customer.LastName }}">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label for="name" class="col-sm-3 col-form-label">Owner User:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@{{ .customer.Username }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" value="1" id="login" name="login" disabled>
+                                        <label class="form-check-label" for="login">
+                                            Can Login?
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label for="name" class="col-sm-3 col-form-label">Contact:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .customer.Email }}">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-sm-9 offset-md-3">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ .customer.Mobile }}">
+                                </div>
+                            </div>
+                            <div class="form-row text-left">
+                                <div class="col-sm-4 offset-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="1" id="payment" name="payment" disabled {{ if eq .customer.Payment true}} checked {{ end }}>
+                                        <label class="form-check-label" for="payment">
+                                            Payment
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn btn-sm btn-outline-primary pull-right">Enable Log In</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <nav class="nav nav-pills" id="pills-tab" role="tablist">
+                        <a class="nav-link active" data-toggle="pill" href="#pills-stores" role="tab" aria-controls="pills-stores" aria-selected="true">Store</a>
+                        <a class="nav-link" href="#">Product</a>
+                        <a class="nav-link" href="#">Employee</a>
+                    </nav>
+                    <div class="tab-content py-3" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-stores" role="tabpanel" aria-labelledby="pills-home-tab">
+                            <div class="btn-toolbar" role="toolbar" aria-label="toolbar">
+                                <div class="btn-group btn-group-sm mr-2" role="group" aria-label="First group">
+                                    <a type="button" class="btn btn-sm btn-primary" href="/store/action?name=create&customer={{ .customer.ID }}"><i class="zmdi zmdi-plus"></i> New</a>
+                                </div>
+                            </div>
+                            {{ $stores := .stores }}
+                            {{ $storeCount := len $stores }}
+                            <table class="table table-sm table-bordered table-striped table-hover mt-2">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Address</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {{ if gt $storeCount 0 }}
+                                    <tr>
+                                        <td class="text-center"><a class="text-decoration-none" href="/store/action?name=detail&id=1">Store Name</a></td>
+                                        <td style="max-width: 200px;">Address with long description will be covered by table column. Then is should be multiline to show all</td>
+                                        <td class="text-center"><span class="badge badge-success">Open</span></td>
+                                        <td class="text-center">
+                                            <a class="btn btn-sm btn-outline-light text-warning" title="Edit" data-toggle="tooltip"><i class="zmdi zmdi-edit"></i></a>
+                                            <a class="btn btn-sm btn-outline-light text-danger" title="Delete" data-toggle="tooltip"><i class="zmdi zmdi-delete"></i></a>
+                                        </td>
+                                    </tr>
+                                {{ else }}
+                                    <tr>
+                                        <td colspan="4" class="text-center font-weight-lighter font-italic text-danger">No data to display</td>
+                                    </tr>
+                                {{ end }}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         {{ template "footer.tmpl.html" .}}
     </body>
 </html>
