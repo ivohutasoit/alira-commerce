@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/ivohutasoit/alira/util"
@@ -31,7 +32,8 @@ func (s *User) ChangeUserPin(args ...interface{}) (map[interface{}]interface{}, 
 		"pin": pin,
 	}
 	payload, _ := json.Marshal(data)
-	req, err := http.NewRequest("POST", "http://localhost:9000/api/alpha/account/pin", bytes.NewBuffer(payload))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_ACCOUNT"), "/pin"),
+		bytes.NewBuffer(payload))
 	if err != nil {
 		return nil, err
 	}

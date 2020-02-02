@@ -41,7 +41,8 @@ func (s *Customer) Get(args ...interface{}) (map[interface{}]interface{}, error)
 	}
 
 	req, err := http.NewRequest("GET",
-		fmt.Sprintf("http://localhost:9000/api/alpha/account/%s", custUser.UserID), nil)
+		fmt.Sprintf("%s%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_ACCOUNT"), "/"+custUser.UserID),
+		nil)
 	if err != nil {
 		return nil, err
 	}
@@ -69,9 +70,23 @@ func (s *Customer) Get(args ...interface{}) (map[interface{}]interface{}, error)
 		return nil, err
 	}
 
+	customerProfile := &model.CustomerProfile{
+		ID:        customer.ID,
+		UserID:    custUser.UserID,
+		Code:      customer.Code,
+		Status:    customer.Status,
+		Payment:   customer.Payment,
+		Username:  userProfile.Username,
+		Email:     userProfile.Email,
+		Mobile:    userProfile.PrimaryMobile,
+		FirstName: userProfile.FirstName,
+		LastName:  userProfile.LastName,
+	}
+
+	fmt.Println(customerProfile)
+
 	return map[interface{}]interface{}{
-		"customer": customer,
-		"profile":  userProfile,
+		"customer": customerProfile,
 		"stores":   data["stores"],
 	}, nil
 }
@@ -138,7 +153,9 @@ func (s *Customer) Create(args ...interface{}) (map[interface{}]interface{}, err
 		"customer_user": true,
 	}
 	payload, _ := json.Marshal(data)
-	req, err := http.NewRequest("POST", "http://localhost:9000/api/alpha/account", bytes.NewBuffer(payload))
+	req, err := http.NewRequest("POST",
+		fmt.Sprintf("%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_ACCOUNT")),
+		bytes.NewBuffer(payload))
 	if err != nil {
 		return nil, err
 	}
@@ -210,12 +227,12 @@ func (s *Customer) Search(args ...interface{}) (map[interface{}]interface{}, err
 			OrderBy:  []string{"c.code"},
 			ShowSQL:  true,
 		})
-		//fmt.Println(paginator)
+
 		temp := make([]model.CustomerProfile, 0)
 		for _, customer := range customers {
-			fmt.Println(customer.UserID)
 			req, err := http.NewRequest("GET",
-				fmt.Sprintf("http://localhost:9000/api/alpha/account/%s", customer.UserID), nil)
+				fmt.Sprintf("%s%s/%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_ACCOUNT"), customer.UserID),
+				nil)
 			if err != nil {
 				return nil, err
 			}

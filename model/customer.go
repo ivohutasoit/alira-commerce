@@ -1,6 +1,5 @@
 package model
 
-
 type CustomerProfile struct {
 	ID        string `json:"id" bson:"id"`
 	UserID    string `json:"user_id" bson:"user_id"`
@@ -16,8 +15,8 @@ type CustomerProfile struct {
 }
 
 type CustomerStore struct {
-	ID string
-	Name string
+	ID      string
+	Name    string
 	Address string
-	Status string
+	Status  string
 }

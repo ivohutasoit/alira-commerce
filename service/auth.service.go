@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -40,7 +41,9 @@ func (s *Auth) AuthenticateUser(args ...interface{}) (map[interface{}]interface{
 		"user_id": custUser.UserID,
 	}
 	payload, _ := json.Marshal(data)
-	req, err := http.NewRequest("POST", "http://localhost:9000/api/alpha/auth/login", bytes.NewBuffer(payload))
+	req, err := http.NewRequest("POST",
+		fmt.Sprintf("%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_LOGIN")),
+		bytes.NewBuffer(payload))
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +90,9 @@ func (s *Auth) VerifyToken(args ...interface{}) (map[interface{}]interface{}, er
 		"purpose": "LOGIN",
 	}
 	payload, _ := json.Marshal(data)
-	req, err := http.NewRequest("POST", "http://localhost:9000/api/alpha/token/verify", bytes.NewBuffer(payload))
+	req, err := http.NewRequest("POST",
+		fmt.Sprintf("%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_TOKENVERiFY")),
+		bytes.NewBuffer(payload))
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +133,9 @@ func (s *Auth) RemoveSessionToken(args ...interface{}) (map[interface{}]interfac
 		return nil, errors.New("invalid token")
 	}
 
-	req, err := http.NewRequest("POST", "http://localhost:9000/api/alpha/auth/logout", nil)
+	req, err := http.NewRequest("POST",
+		fmt.Sprintf("%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_LOGOUT")),
+		nil)
 	if err != nil {
 		return nil, err
 	}

@@ -97,7 +97,9 @@ func (m *Auth) SessionRequired(args ...interface{}) gin.HandlerFunc {
 				}
 				// https://tutorialedge.net/golang/consuming-restful-api-with-go/
 				payload, _ := json.Marshal(data)
-				resp, err := http.Post(os.Getenv("URL_AUTH"), "application/json", bytes.NewBuffer(payload))
+				fmt.Println(fmt.Sprintf("%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_TOKENINFO")))
+				resp, err := http.Post(fmt.Sprintf("%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_TOKENINFO")),
+					"application/json", bytes.NewBuffer(payload))
 				if err != nil && !opt {
 					session.Clear()
 					session.Save()
@@ -232,7 +234,8 @@ func (m *Auth) TokenRequired(args ...interface{}) gin.HandlerFunc {
 		}
 		// https://tutorialedge.net/golang/consuming-restful-api-with-go/
 		payload, _ := json.Marshal(data)
-		resp, err := http.Post(os.Getenv("URL_AUTH"), "application/json", bytes.NewBuffer(payload))
+		resp, err := http.Post(fmt.Sprintf("%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_TOKENINFO")),
+			"application/json", bytes.NewBuffer(payload))
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"code":   http.StatusUnauthorized,
