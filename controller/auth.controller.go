@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/ivohutasoit/alira"
 	"github.com/ivohutasoit/alira-commerce/messaging"
@@ -135,17 +136,29 @@ func (ctrl *Auth) TokenHandler(c *gin.Context) {
 func (ctlr *Auth) LogoutHandler(c *gin.Context) {
 	api := strings.Contains(c.Request.URL.Path, os.Getenv("URL_API"))
 	as := &service.Auth{}
+	var accessToken string
+	session := sessions.Default(c)
 	if api {
 		tokens := strings.Split(c.Request.Header.Get("Authorization"), " ")
-		data, err := as.RemoveSessionToken(tokens[1])
-		if err != nil {
+		accessToken = tokens[1]
+	} else {
+		accessToken = session.Get("access_token").(string)
+	}
+
+	data, err := as.RemoveSessionToken(accessToken)
+	if err != nil {
+		if api {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"code":   http.StatusBadRequest,
 				"status": http.StatusText(http.StatusBadRequest),
 				"error":  err.Error(),
 			})
-			return
 		}
+		c.Redirect(http.StatusMovedPermanently, "/")
+		return
+	}
+
+	if api {
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusOK,
 			"status":  http.StatusText(http.StatusOK),
@@ -153,4 +166,9 @@ func (ctlr *Auth) LogoutHandler(c *gin.Context) {
 		})
 		return
 	}
+
+	session.Clear()
+	session.Save()
+
+	c.Redirect(http.StatusMovedPermanently, "/")
 }
