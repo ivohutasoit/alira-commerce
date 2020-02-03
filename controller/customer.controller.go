@@ -5,11 +5,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ivohutasoit/alira-commerce/model"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/ivohutasoit/alira"
+	"github.com/ivohutasoit/alira-commerce/model"
 	"github.com/ivohutasoit/alira-commerce/service"
 	"github.com/ivohutasoit/alira/util"
 )

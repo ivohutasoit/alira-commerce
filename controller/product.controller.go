@@ -7,6 +7,7 @@ type Product struct{}
 // CreateHandler godoc
 // @Summary Create new product
 // @Description Create new product based on customer and or store
+// @Tags Product
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer [accessing token]"
@@ -20,6 +21,7 @@ func (ctrl *Product) CreateHandler(c *gin.Context) {
 // DetailHandler godoc
 // @Summary Product information
 // @Description Detail of product based on id provided
+// @Tags Product
 // @Accept json
 // @Produce json
 // @Param id path string true "product id or barcode"
@@ -34,6 +36,7 @@ func (ctrl *Product) DetailHandler(c *gin.Context) {
 // SearchHandler godoc
 // @Summary Find orders
 // @Description Find order based on customer or store
+// @Tags Product
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer [accessing token]"

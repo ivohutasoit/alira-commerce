@@ -16,6 +16,7 @@ type User struct{}
 // PinHandler godoc
 // @Summary Change user pin
 // @Description Update authenticated user pin
+// @Tags User
 // @Accept json
 // @Produce json
 // @Param pin body model.Pin true "User pin"

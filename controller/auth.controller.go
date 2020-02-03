@@ -6,16 +6,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ivohutasoit/alira-commerce/messaging"
-
-	"github.com/ivohutasoit/alira-commerce/service"
-
-	"github.com/ivohutasoit/alira-commerce/model"
-
-	"github.com/ivohutasoit/alira/util"
-
 	"github.com/gin-gonic/gin"
 	"github.com/ivohutasoit/alira"
+	"github.com/ivohutasoit/alira-commerce/messaging"
+	"github.com/ivohutasoit/alira-commerce/model"
+	"github.com/ivohutasoit/alira-commerce/service"
+	"github.com/ivohutasoit/alira/util"
 )
 
 type Auth struct{}
@@ -23,6 +19,7 @@ type Auth struct{}
 // LoginHandler godoc
 // @Summary Log in user
 // @Description Handler user authentication
+// @Tags Authentication
 // @Accept json
 // @Produce json
 // @Param login body model.Login true "Login Request"
@@ -80,6 +77,7 @@ func (ctrl *Auth) LoginHandler(c *gin.Context) {
 // TokenHandler godoc
 // @Summary Verify token
 // @Description Authentication token verification handler
+// @Tags Authentication
 // @Accept json
 // @Produce json
 // @Param token body model.Token true "Authentication Token"
@@ -127,6 +125,7 @@ func (ctrl *Auth) TokenHandler(c *gin.Context) {
 // LogoutHandler godoc
 // @Summary Log out authenticated user
 // @Description Handler log out authenticated user
+// @Tags Authentication
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer [accessing token]"
