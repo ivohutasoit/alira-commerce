@@ -25,6 +25,12 @@ func (route *Web) Initialize(r *gin.Engine) {
 			URL: "doc.json",
 		}, swaggerFiles.Handler))
 
+		auth := &controller.Auth{}
+		authWeb := web.Group("/auth")
+		{
+			authWeb.GET("/logout", auth.LogoutHandler)
+		}
+
 		customer := &controller.Customer{}
 		customerWeb := web.Group("/customer")
 		{
