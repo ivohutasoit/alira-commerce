@@ -7,6 +7,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/sessions v0.0.1
 	github.com/gin-gonic/gin v1.5.0
+	github.com/google/uuid v1.1.1 // indirect
 	github.com/heroku/x v0.0.0-20171004170240-705849e307dd
 	github.com/ivohutasoit/alira v0.0.0-20200202153803-b0b5453fba4d
 	github.com/joho/godotenv v1.3.0

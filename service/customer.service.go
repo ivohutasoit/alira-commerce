@@ -61,7 +61,10 @@ func (s *Customer) Get(args ...interface{}) (map[interface{}]interface{}, error)
 	}
 	var userProfile messaging.UserProfile
 	parser := &util.Parser{}
-	parser.UnmarshalResponse(body, http.StatusOK, &userProfile)
+	_, err = parser.UnmarshalResponse(body, http.StatusOK, &userProfile)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	ss := &Store{}
 
@@ -175,7 +178,10 @@ func (s *Customer) Create(args ...interface{}) (map[interface{}]interface{}, err
 	var userProfile messaging.UserProfile
 
 	parser := &util.Parser{}
-	parser.UnmarshalResponse(body, http.StatusCreated, &userProfile)
+	_, err = parser.UnmarshalResponse(body, http.StatusCreated, &userProfile)
+	if err != nil {
+		return nil, err
+	}
 
 	alira.GetConnection().Create(&customer)
 	custUser := &commerce.CustomerUser{
@@ -195,7 +201,8 @@ func (s *Customer) Create(args ...interface{}) (map[interface{}]interface{}, err
 		Subject:  "[Alira] Welcome",
 		Template: "views/mail/welcome.html",
 		Data: map[interface{}]interface{}{
-			"name": fmt.Sprintf("%s %s", userProfile.FirstName, userProfile.LastName),
+			"name":     fmt.Sprintf("%s %s", userProfile.FirstName, userProfile.LastName),
+			"username": username,
 		},
 	}
 	ms := &service.MailService{}
@@ -252,7 +259,10 @@ func (s *Customer) Search(args ...interface{}) (map[interface{}]interface{}, err
 			var userProfile messaging.UserProfile
 
 			parser := &util.Parser{}
-			parser.UnmarshalResponse(body, http.StatusOK, &userProfile)
+			_, err = parser.UnmarshalResponse(body, http.StatusOK, &userProfile)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
 
 			customer.UserID = userProfile.ID
 			customer.Username = userProfile.Username
