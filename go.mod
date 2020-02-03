@@ -8,7 +8,7 @@ require (
 	github.com/gin-contrib/sessions v0.0.1
 	github.com/gin-gonic/gin v1.5.0
 	github.com/heroku/x v0.0.0-20171004170240-705849e307dd
-	github.com/ivohutasoit/alira v0.0.0-20200202101003-930b274074ab
+	github.com/ivohutasoit/alira v0.0.0
 	github.com/joho/godotenv v1.3.0
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0
