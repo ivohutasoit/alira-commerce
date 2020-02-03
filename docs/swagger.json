@@ -44,7 +44,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\": 200, \"status\": \"OK\", \"message\": \"Success\", \"data\": \"data\"}",
+                        "description": "{\"code\": 200, \"status\": \"OK\", \"message\": \"Success\", \"data\": {\"user_id\": \"UserID\", \"use_pin\": \"UsePin\", \"purpose\": \"Purpose\"}}",
                         "schema": {
                             "type": "string"
                         }
@@ -118,6 +118,44 @@
                         "schema": {
                             "$ref": "#/definitions/model.Token"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"status\": \"OK\", \"message\": \"Success\", \"data\": \"data\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"code\": 400, \"status\": \"Bad request\", \"error\": \"Error\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/category": {
+            "get": {
+                "description": "List of product category based on customer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "List of Store",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [accessing token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
