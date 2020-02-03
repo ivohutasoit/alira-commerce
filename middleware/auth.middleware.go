@@ -116,7 +116,10 @@ func (m *Auth) SessionRequired(args ...interface{}) gin.HandlerFunc {
 				}
 				var userProfile messaging.UserProfile
 				parser := &util.Parser{}
-				parser.UnmarshalResponse(respData, http.StatusOK, &userProfile)
+				_, err = parser.UnmarshalResponse(respData, http.StatusOK, &userProfile)
+				if err != nil {
+					fmt.Println(err.Error())
+				}
 
 				c.Set("user_id", userProfile.ID)
 				alira.ViewData = gin.H{
@@ -254,7 +257,10 @@ func (m *Auth) TokenRequired(args ...interface{}) gin.HandlerFunc {
 		}
 		var userProfile messaging.UserProfile
 		parser := &util.Parser{}
-		parser.UnmarshalResponse(respData, http.StatusOK, &userProfile)
+		_, err = parser.UnmarshalResponse(respData, http.StatusOK, &userProfile)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 
 		c.Set("user_id", userProfile.ID)
 		if tokens[0] == "Refresh" {

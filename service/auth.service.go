@@ -59,7 +59,7 @@ func (s *Auth) AuthenticateUser(args ...interface{}) (map[interface{}]interface{
 	if err != nil {
 		return nil, err
 	}
-	var loggedUser messaging.LoggedUser
+	loggedUser := &messaging.LoggedUser{UsePin: false}
 	parser := &util.Parser{}
 	response, err := parser.UnmarshalResponse(body, http.StatusOK, &loggedUser)
 	if err != nil {

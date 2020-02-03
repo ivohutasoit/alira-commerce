@@ -46,7 +46,10 @@ func (m *Callback) WebLoginToken(args ...interface{}) gin.HandlerFunc {
 			}
 			var loggedUser messaging.LoggedUser
 			parser := &util.Parser{}
-			parser.UnmarshalResponse(respData, http.StatusOK, &loggedUser)
+			_, err = parser.UnmarshalResponse(respData, http.StatusOK, &loggedUser)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
 
 			if loggedUser.AccessToken != "" {
 				session.Set("access_token", loggedUser.AccessToken)

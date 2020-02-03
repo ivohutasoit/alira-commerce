@@ -8,7 +8,6 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/ivohutasoit/alira"
 	"github.com/ivohutasoit/alira-commerce/messaging"
 	"github.com/ivohutasoit/alira-commerce/model"
 	"github.com/ivohutasoit/alira-commerce/service"
@@ -24,7 +23,7 @@ type Auth struct{}
 // @Accept json
 // @Produce json
 // @Param login body model.Login true "Login Request"
-// @Success 200 {string} string "{"code": 200, "status": "OK", "message": "Success", "data": "data"}"
+// @Success 200 {string} string "{"code": 200, "status": "OK", "message": "Success", "data": {"user_id": "UserID", "use_pin": "UsePin", "purpose": "Purpose"}}"
 // @Failure 400 {string} string "{"code": 400, "status": "Bad request", "error": "Error"}"
 // @Router /auth/login [post]
 func (ctrl *Auth) LoginHandler(c *gin.Context) {
@@ -43,10 +42,10 @@ func (ctrl *Auth) LoginHandler(c *gin.Context) {
 	var req model.Login
 	if api {
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, &alira.Response{
-				Code:   http.StatusBadRequest,
-				Status: http.StatusText(http.StatusBadRequest),
-				Error:  err.Error(),
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"code":   http.StatusBadRequest,
+				"status": http.StatusText(http.StatusBadRequest),
+				"error":  err.Error(),
 			})
 			return
 		}
@@ -55,10 +54,10 @@ func (ctrl *Auth) LoginHandler(c *gin.Context) {
 	data, err := as.AuthenticateUser(req.UserID)
 	if err != nil {
 		if api {
-			c.AbortWithStatusJSON(http.StatusBadRequest, &alira.Response{
-				Code:   http.StatusBadRequest,
-				Status: http.StatusText(http.StatusBadRequest),
-				Error:  err.Error(),
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"code":   http.StatusBadRequest,
+				"status": http.StatusText(http.StatusBadRequest),
+				"error":  err.Error(),
 			})
 			return
 		}
@@ -69,7 +68,11 @@ func (ctrl *Auth) LoginHandler(c *gin.Context) {
 			"code":    http.StatusOK,
 			"status":  http.StatusText(http.StatusOK),
 			"message": data["message"].(string),
-			"data":    loggedUser,
+			"data": map[string]interface{}{
+				"user_id": loggedUser.UserID,
+				"use_pin": loggedUser.UsePin,
+				"purpose": loggedUser.Purpose,
+			},
 		})
 		return
 	}
@@ -91,10 +94,10 @@ func (ctrl *Auth) TokenHandler(c *gin.Context) {
 	var req model.Token
 	if api {
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, &alira.Response{
-				Code:   http.StatusBadRequest,
-				Status: http.StatusText(http.StatusBadRequest),
-				Error:  err.Error(),
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"code":   http.StatusBadRequest,
+				"status": http.StatusText(http.StatusBadRequest),
+				"error":  err.Error(),
 			})
 			return
 		}
@@ -103,10 +106,10 @@ func (ctrl *Auth) TokenHandler(c *gin.Context) {
 	data, err := as.VerifyToken(req.UserID, req.Token)
 	if err != nil {
 		if api {
-			c.AbortWithStatusJSON(http.StatusBadRequest, &alira.Response{
-				Code:   http.StatusBadRequest,
-				Status: http.StatusText(http.StatusBadRequest),
-				Error:  err.Error(),
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"code":   http.StatusBadRequest,
+				"status": http.StatusText(http.StatusBadRequest),
+				"error":  err.Error(),
 			})
 			return
 		}
@@ -117,7 +120,11 @@ func (ctrl *Auth) TokenHandler(c *gin.Context) {
 			"code":    http.StatusOK,
 			"status":  http.StatusText(http.StatusOK),
 			"message": data["message"].(string),
-			"data":    loggedUser,
+			"data": map[string]interface{}{
+				"user_id":       loggedUser.UserID,
+				"access_token":  loggedUser.AccessToken,
+				"refresh_token": loggedUser.RefreshToken,
+			},
 		})
 		return
 	}
