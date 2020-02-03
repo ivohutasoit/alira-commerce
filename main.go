@@ -36,7 +36,7 @@ func init() {
 // @license.name GNU General Public License v3.0
 // @license.url https://www.gnu.org/licenses/gpl-3.0.en.html
 
-// @host https://aliracommerce.herokuapp.com
+// @host aliracommerce.herokuapp.com
 // @BasePath /api/alpha
 func main() {
 	err := godotenv.Load()

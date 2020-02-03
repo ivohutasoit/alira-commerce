@@ -15,7 +15,7 @@
         },
         "version": "alpha"
     },
-    "host": "https://aliracommerce.herokuapp.com",
+    "host": "aliracommerce.herokuapp.com",
     "basePath": "/api/alpha",
     "paths": {
         "/auth/login": {
@@ -184,7 +184,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Product"
+                    "Sales Order"
                 ],
                 "summary": "Find orders",
                 "parameters": [

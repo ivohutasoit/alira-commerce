@@ -39,7 +39,7 @@ definitions:
     - token
     - user_id
     type: object
-host: https://aliracommerce.herokuapp.com
+host: aliracommerce.herokuapp.com
 info:
   contact:
     email: hello@alira.com
@@ -216,7 +216,7 @@ paths:
             type: string
       summary: Find orders
       tags:
-      - Product
+      - Sales Order
   /product:
     post:
       consumes:
