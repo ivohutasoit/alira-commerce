@@ -12,6 +12,7 @@ type Api struct{}
 
 func (route *Api) Initialize(r *gin.Engine) {
 	authMiddleware := &middleware.Auth{}
+	customerMiddleware := &middleware.Customer{}
 	api := r.Group(os.Getenv("URL_API"))
 	api.Use(authMiddleware.TokenRequired())
 	{
@@ -31,6 +32,11 @@ func (route *Api) Initialize(r *gin.Engine) {
 		customerApi := api.Group("/customer")
 		{
 			customerApi.GET("/:id", customer.DetailHandler)
+		}
+		store := &controller.Store{}
+		storeApi := api.Group("/store")
+		{
+			storeApi.POST("", customerMiddleware.OwnerRequired(), store.CreateHandler)
 		}
 	}
 }

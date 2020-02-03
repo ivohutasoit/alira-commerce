@@ -14,9 +14,9 @@ type CustomerProfile struct {
 	Payment   bool
 }
 
-type CustomerStore struct {
-	ID      string
-	Name    string
-	Address string
-	Status  string
+type Store struct {
+	Owner   string `json:"owner" bson:"owner"`
+	Code    string `json:"code" bson:"code" binding:"required,min=6"`
+	Name    string `json:"name" bson:"name" binding:"required,min=3"`
+	Address string `json:"address" bson:"address" binding:"required,min=10"`
 }
