@@ -13,7 +13,9 @@ type Web struct{}
 
 func (route *Web) Initialize(r *gin.Engine) {
 	authMiddleware := &middleware.Auth{}
+	callbackMiddleware := &middleware.Callback{}
 	web := r.Group("")
+	web.Use(callbackMiddleware.WebLoginToken())
 	web.Use(authMiddleware.SessionRequired())
 	{
 		index := &controller.Index{}

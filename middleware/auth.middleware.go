@@ -97,7 +97,6 @@ func (m *Auth) SessionRequired(args ...interface{}) gin.HandlerFunc {
 				}
 				// https://tutorialedge.net/golang/consuming-restful-api-with-go/
 				payload, _ := json.Marshal(data)
-				fmt.Println(fmt.Sprintf("%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_TOKENINFO")))
 				resp, err := http.Post(fmt.Sprintf("%s%s", os.Getenv("URL_ACCOUNT"), os.Getenv("API_TOKENINFO")),
 					"application/json", bytes.NewBuffer(payload))
 				if err != nil && !opt {
