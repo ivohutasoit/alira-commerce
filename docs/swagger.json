@@ -15,7 +15,7 @@
         },
         "version": "alpha"
     },
-    "host": "localhost:9001",
+    "host": "https://aliracommerce.herokuapp.com",
     "basePath": "/api/alpha",
     "paths": {
         "/auth/login": {
@@ -26,6 +26,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Authentication"
                 ],
                 "summary": "Log in user",
                 "parameters": [
@@ -64,6 +67,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Log out authenticated user",
                 "parameters": [
                     {
@@ -98,6 +104,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Authentication"
                 ],
                 "summary": "Verify token",
                 "parameters": [
@@ -136,6 +145,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Sales Order"
+                ],
                 "summary": "Create order",
                 "parameters": [
                     {
@@ -171,6 +183,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Product"
+                ],
                 "summary": "Find orders",
                 "parameters": [
                     {
@@ -205,6 +220,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Sales Order"
                 ],
                 "summary": "Order detail",
                 "parameters": [
@@ -248,6 +266,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Product"
+                ],
                 "summary": "Create new product",
                 "parameters": [
                     {
@@ -283,6 +304,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Product"
+                ],
                 "summary": "Product information",
                 "parameters": [
                     {
@@ -317,16 +341,64 @@
             }
         },
         "/store": {
-            "post": {
-                "description": "Create new store with using customer id",
+            "get": {
+                "description": "List of store based on customer",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Store"
+                ],
+                "summary": "List of Store",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [accessing token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"status\": \"OK\", \"message\": \"Success\", \"data\": \"data\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"code\": 400, \"status\": \"Bad request\", \"error\": \"Error\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create new store with",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Store"
+                ],
                 "summary": "Create new store",
                 "parameters": [
+                    {
+                        "description": "Store info",
+                        "name": "store",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Store"
+                        }
+                    },
                     {
                         "type": "string",
                         "description": "Bearer [accessing token]",
@@ -359,6 +431,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Store"
                 ],
                 "summary": "Search Store",
                 "parameters": [
@@ -394,6 +469,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Store"
                 ],
                 "summary": "Store information",
                 "parameters": [
@@ -436,6 +514,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "User"
                 ],
                 "summary": "Change user pin",
                 "parameters": [
@@ -492,6 +573,28 @@
             ],
             "properties": {
                 "code": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Store": {
+            "type": "object",
+            "required": [
+                "address",
+                "code",
+                "name"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner": {
                     "type": "string"
                 }
             }

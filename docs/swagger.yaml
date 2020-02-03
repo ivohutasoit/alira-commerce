@@ -14,6 +14,21 @@ definitions:
     required:
     - code
     type: object
+  model.Store:
+    properties:
+      address:
+        type: string
+      code:
+        type: string
+      name:
+        type: string
+      owner:
+        type: string
+    required:
+    - address
+    - code
+    - name
+    type: object
   model.Token:
     properties:
       token:
@@ -24,7 +39,7 @@ definitions:
     - token
     - user_id
     type: object
-host: localhost:9001
+host: https://aliracommerce.herokuapp.com
 info:
   contact:
     email: hello@alira.com
@@ -64,6 +79,8 @@ paths:
           schema:
             type: string
       summary: Log in user
+      tags:
+      - Authentication
   /auth/logout:
     post:
       consumes:
@@ -88,6 +105,8 @@ paths:
           schema:
             type: string
       summary: Log out authenticated user
+      tags:
+      - Authentication
   /auth/token:
     post:
       consumes:
@@ -113,6 +132,8 @@ paths:
           schema:
             type: string
       summary: Verify token
+      tags:
+      - Authentication
   /order:
     post:
       consumes:
@@ -137,6 +158,8 @@ paths:
           schema:
             type: string
       summary: Create order
+      tags:
+      - Sales Order
   /order/{id}:
     get:
       consumes:
@@ -166,6 +189,8 @@ paths:
           schema:
             type: string
       summary: Order detail
+      tags:
+      - Sales Order
   /order/search:
     post:
       consumes:
@@ -190,6 +215,8 @@ paths:
           schema:
             type: string
       summary: Find orders
+      tags:
+      - Product
   /product:
     post:
       consumes:
@@ -214,6 +241,8 @@ paths:
           schema:
             type: string
       summary: Create new product
+      tags:
+      - Product
   /product/{id}:
     get:
       consumes:
@@ -243,11 +272,13 @@ paths:
           schema:
             type: string
       summary: Product information
+      tags:
+      - Product
   /store:
-    post:
+    get:
       consumes:
       - application/json
-      description: Create new store with using customer id
+      description: List of store based on customer
       parameters:
       - description: Bearer [accessing token]
         in: header
@@ -266,7 +297,40 @@ paths:
           description: '{"code": 400, "status": "Bad request", "error": "Error"}'
           schema:
             type: string
+      summary: List of Store
+      tags:
+      - Store
+    post:
+      consumes:
+      - application/json
+      description: Create new store with
+      parameters:
+      - description: Store info
+        in: body
+        name: store
+        required: true
+        schema:
+          $ref: '#/definitions/model.Store'
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
       summary: Create new store
+      tags:
+      - Store
   /store/{id}:
     get:
       consumes:
@@ -296,6 +360,8 @@ paths:
           schema:
             type: string
       summary: Store information
+      tags:
+      - Store
   /store/search:
     post:
       consumes:
@@ -320,6 +386,8 @@ paths:
           schema:
             type: string
       summary: Search Store
+      tags:
+      - Store
   /user/pin:
     post:
       consumes:
@@ -350,4 +418,6 @@ paths:
           schema:
             type: string
       summary: Change user pin
+      tags:
+      - User
 swagger: "2.0"
