@@ -10,6 +10,7 @@ type Order struct{}
 // @Tags Sales Order
 // @Accept json
 // @Produce json
+// @Param order body model.StoreOrder true "Store order"
 // @Param Authorization header string true "Bearer [accessing token]"
 // @Success 200 {string} string "{"code": 200, "status": "OK", "message": "Success", "data": "data"}"
 // @Failure 400 {string} string "{"code": 400, "status": "Bad request", "error": "Error"}"

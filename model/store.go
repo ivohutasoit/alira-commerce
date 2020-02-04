@@ -13,3 +13,30 @@ type StoreProduct struct {
 	SellPrice float64 `form:"sell_price" json:"sell_price" xml:"sell_price" binding:"required,gt=-1"`
 	Quantity  int64   `form:"qty" json:"qty" xml:"qty" binding:"gt=-1"`
 }
+
+type StoreOrder struct {
+	RecipeNo    string         `form:"recipe_no" json:"recipe_no" xml:"recipe_no"`
+	Teller      string         `form:"teller" json:"teller" xml:"teller" binding:"required"`
+	Store       string         `form:"store" json:"store" xml:"store" binding:"required"`
+	Date        string         `form:"date" json:"date" xml:"date" binding:"required"`
+	Time        string         `form:"time" json:"time" xml:"time" binding:"required"`
+	Currency    string         `form:"currency" json:"currency" xml:"currency" binding:"required"`
+	PaymentMode string         `form:"payment_mode" json:"payment_mode" xml:"payment_mode"`
+	PaymentNo   string         `form:"payment_no" json:"payment_no" xml:"payment_no"`
+	Subtotal    float64        `form:"subtotal" json:"subtotal" xml:"subtotal"`
+	TaxPercent  float64        `form:"tax_percent" json:"tax_percent" xml:"tax_percent"`
+	TaxAmount   float64        `form:"tax_amount" json:"tax_amount" xml:"tax_amount"`
+	Total       float64        `form:"total" json:"total" xml:"total" binding:"required"`
+	Rounding    float64        `form:"rounding" json:"rounding" xml:"rounding" binding:"rounding"`
+	Status      string         `form:"status" json:"status" xml:"status" binding:"required"`
+	Products    []OrderProduct `form:"products" json:"products" xml:"products" binding:"required"`
+}
+
+type OrderProduct struct {
+	ID       string  `form:"id" json:"id" xml:"id" binding:"required"`
+	Code     string  `form:"code" json:"code" xml:"code"`
+	Name     string  `form:"name" json:"name" xml:"name"`
+	Quantity int64   `form:"qty" json:"qty" xml:"qty" binding:"required"`
+	Currency string  `form:"currency" json:"currency" xml:"currency" binding:"required"`
+	Price    float64 `form:"price" json:"price" xml:"price" binding:"required"`
+}

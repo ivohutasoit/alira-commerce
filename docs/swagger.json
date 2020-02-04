@@ -189,6 +189,15 @@
                 "summary": "Create order",
                 "parameters": [
                     {
+                        "description": "Store order",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.StoreOrder"
+                        }
+                    },
+                    {
                         "type": "string",
                         "description": "Bearer [accessing token]",
                         "name": "Authorization",
@@ -222,7 +231,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Product"
+                    "Sales Order"
                 ],
                 "summary": "Find orders",
                 "parameters": [
@@ -613,6 +622,35 @@
                 }
             }
         },
+        "model.OrderProduct": {
+            "type": "object",
+            "required": [
+                "currency",
+                "id",
+                "price",
+                "qty"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "qty": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.Pin": {
             "type": "object",
             "required": [
@@ -643,6 +681,69 @@
                 },
                 "owner": {
                     "type": "string"
+                }
+            }
+        },
+        "model.StoreOrder": {
+            "type": "object",
+            "required": [
+                "currency",
+                "date",
+                "products",
+                "status",
+                "store",
+                "teller",
+                "time",
+                "total"
+            ],
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "payment_mode": {
+                    "type": "string"
+                },
+                "payment_no": {
+                    "type": "string"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.OrderProduct"
+                    }
+                },
+                "recipe_no": {
+                    "type": "string"
+                },
+                "rounding": {
+                    "type": "number"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "store": {
+                    "type": "string"
+                },
+                "subtotal": {
+                    "type": "number"
+                },
+                "tax_amount": {
+                    "type": "number"
+                },
+                "tax_percent": {
+                    "type": "number"
+                },
+                "teller": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "number"
                 }
             }
         },

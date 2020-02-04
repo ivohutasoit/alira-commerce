@@ -7,6 +7,26 @@ definitions:
     required:
     - user_id
     type: object
+  model.OrderProduct:
+    properties:
+      code:
+        type: string
+      currency:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      qty:
+        type: integer
+    required:
+    - currency
+    - id
+    - price
+    - qty
+    type: object
   model.Pin:
     properties:
       code:
@@ -28,6 +48,50 @@ definitions:
     - address
     - code
     - name
+    type: object
+  model.StoreOrder:
+    properties:
+      currency:
+        type: string
+      date:
+        type: string
+      payment_mode:
+        type: string
+      payment_no:
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/model.OrderProduct'
+        type: array
+      recipe_no:
+        type: string
+      rounding:
+        type: number
+      status:
+        type: string
+      store:
+        type: string
+      subtotal:
+        type: number
+      tax_amount:
+        type: number
+      tax_percent:
+        type: number
+      teller:
+        type: string
+      time:
+        type: string
+      total:
+        type: number
+    required:
+    - currency
+    - date
+    - products
+    - status
+    - store
+    - teller
+    - time
+    - total
     type: object
   model.StoreProduct:
     properties:
@@ -200,6 +264,12 @@ paths:
       - application/json
       description: Create order by store
       parameters:
+      - description: Store order
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/model.StoreOrder'
       - description: Bearer [accessing token]
         in: header
         name: Authorization
@@ -276,7 +346,7 @@ paths:
             type: string
       summary: Find orders
       tags:
-      - Product
+      - Sales Order
   /product:
     post:
       consumes:
