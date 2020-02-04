@@ -62,6 +62,20 @@ func (ctrl *Product) CreateHandler(c *gin.Context) {
 	}
 }
 
+// ListHandler godoc
+// @Summary Product information
+// @Description Detail of product based on id provided
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer [accessing token]"
+// @Success 200 {string} string "{"code": 200, "status": "OK", "message": "Success", "data": "data"}"
+// @Failure 400 {string} string "{"code": 400, "status": "Bad request", "error": "Error"}"
+// @Router /product [get]
+func (ctrl *Product) ListHandler(c *gin.Context) {
+
+}
+
 // DetailHandler godoc
 // @Summary Product information
 // @Description Detail of product based on id provided
