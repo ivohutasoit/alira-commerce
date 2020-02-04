@@ -38,5 +38,10 @@ func (route *Api) Initialize(r *gin.Engine) {
 		{
 			storeApi.POST("", customerMiddleware.OwnerRequired(), store.CreateHandler)
 		}
+		product := &controller.Product{}
+		productApi := api.Group("/product")
+		{
+			productApi.POST("", product.CreateHandler)
+		}
 	}
 }

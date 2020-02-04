@@ -29,6 +29,40 @@ definitions:
     - code
     - name
     type: object
+  model.StoreProduct:
+    properties:
+      barcode:
+        type: string
+      buy_price:
+        type: number
+      category:
+        type: string
+      code:
+        type: string
+      currency:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      qty:
+        type: integer
+      sell_price:
+        type: number
+      store:
+        type: string
+      unit:
+        type: string
+    required:
+    - barcode
+    - category
+    - code
+    - currency
+    - name
+    - sell_price
+    - store
+    - unit
+    type: object
   model.Token:
     properties:
       token:
@@ -242,13 +276,19 @@ paths:
             type: string
       summary: Find orders
       tags:
-      - Sales Order
+      - Product
   /product:
     post:
       consumes:
       - application/json
       description: Create new product based on customer and or store
       parameters:
+      - description: Store product
+        in: body
+        name: store
+        required: true
+        schema:
+          $ref: '#/definitions/model.StoreProduct'
       - description: Bearer [accessing token]
         in: header
         name: Authorization

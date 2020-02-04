@@ -222,7 +222,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Sales Order"
+                    "Product"
                 ],
                 "summary": "Find orders",
                 "parameters": [
@@ -309,6 +309,15 @@
                 ],
                 "summary": "Create new product",
                 "parameters": [
+                    {
+                        "description": "Store product",
+                        "name": "store",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.StoreProduct"
+                        }
+                    },
                     {
                         "type": "string",
                         "description": "Bearer [accessing token]",
@@ -633,6 +642,54 @@
                     "type": "string"
                 },
                 "owner": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.StoreProduct": {
+            "type": "object",
+            "required": [
+                "barcode",
+                "category",
+                "code",
+                "currency",
+                "name",
+                "sell_price",
+                "store",
+                "unit"
+            ],
+            "properties": {
+                "barcode": {
+                    "type": "string"
+                },
+                "buy_price": {
+                    "type": "number"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "qty": {
+                    "type": "integer"
+                },
+                "sell_price": {
+                    "type": "number"
+                },
+                "store": {
+                    "type": "string"
+                },
+                "unit": {
                     "type": "string"
                 }
             }
