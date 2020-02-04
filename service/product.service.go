@@ -67,7 +67,7 @@ func (s *Product) Create(args ...interface{}) (map[interface{}]interface{}, erro
 		category = &commerce.StoreProductCategory{
 			StoreID: store.Model.ID,
 			Code:    strings.ToUpper(strings.TrimSpace(req.Category)),
-			strings.Title(strings.TrimSpace(req.Category)),
+			Name: strings.Title(strings.TrimSpace(req.Category)),
 		}
 		alira.GetConnection().Create(&category)
 	}
