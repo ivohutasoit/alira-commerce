@@ -142,38 +142,33 @@ func (ctrl *Auth) TokenHandler(c *gin.Context) {
 // @Router /auth/logout [post]
 func (ctlr *Auth) LogoutHandler(c *gin.Context) {
 	api := strings.Contains(c.Request.URL.Path, os.Getenv("URL_API"))
-	as := &service.Auth{}
-	var accessToken string
-	session := sessions.Default(c)
+
 	if api {
 		tokens := strings.Split(c.Request.Header.Get("Authorization"), " ")
-		accessToken = tokens[1]
-	} else {
-		accessToken = session.Get("access_token").(string)
-	}
-
-	data, err := as.RemoveSessionToken(accessToken)
-	if err != nil {
-		if api {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"code":   http.StatusBadRequest,
-				"status": http.StatusText(http.StatusBadRequest),
-				"error":  err.Error(),
-			})
+		as := &service.Auth{}
+		data, err := as.RemoveSessionToken(tokens[1])
+		if err != nil {
+			if api {
+				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+					"code":   http.StatusBadRequest,
+					"status": http.StatusText(http.StatusBadRequest),
+					"error":  err.Error(),
+				})
+			}
+			return
 		}
-		c.Redirect(http.StatusMovedPermanently, "/")
-		return
+
+		if api {
+			c.JSON(http.StatusOK, gin.H{
+				"code":    http.StatusOK,
+				"status":  http.StatusText(http.StatusOK),
+				"message": data["message"].(string),
+			})
+			return
+		}
 	}
 
-	if api {
-		c.JSON(http.StatusOK, gin.H{
-			"code":    http.StatusOK,
-			"status":  http.StatusText(http.StatusOK),
-			"message": data["message"].(string),
-		})
-		return
-	}
-
+	session := sessions.Default(c)
 	session.Clear()
 	session.Save()
 
