@@ -63,8 +63,8 @@ func (ctrl *Product) CreateHandler(c *gin.Context) {
 }
 
 // ListHandler godoc
-// @Summary Product information
-// @Description Detail of product based on id provided
+// @Summary List of Product
+// @Description List of Product based on authenticated user
 // @Tags Product
 // @Accept json
 // @Produce json
