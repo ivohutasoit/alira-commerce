@@ -34,6 +34,25 @@ definitions:
     required:
     - code
     type: object
+  model.SearchProduct:
+    properties:
+      keyword:
+        type: string
+      limit:
+        type: integer
+      page:
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/model.StoreProduct'
+        type: array
+      total_page:
+        type: integer
+      total_record:
+        type: integer
+    required:
+    - keyword
+    type: object
   model.Store:
     properties:
       address:
@@ -348,6 +367,31 @@ paths:
       tags:
       - Sales Order
   /product:
+    get:
+      consumes:
+      - application/json
+      description: Detail of product based on id provided
+      parameters:
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Product information
+      tags:
+      - Product
     post:
       consumes:
       - application/json
@@ -408,6 +452,38 @@ paths:
           schema:
             type: string
       summary: Product information
+      tags:
+      - Product
+  /product/search:
+    post:
+      consumes:
+      - application/json
+      description: Find order based on customer or store
+      parameters:
+      - description: Store product search
+        in: body
+        name: search
+        required: true
+        schema:
+          $ref: '#/definitions/model.SearchProduct'
+      - description: Bearer [accessing token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "status": "OK", "message": "Success", "data":
+            "data"}'
+          schema:
+            type: string
+        "400":
+          description: '{"code": 400, "status": "Bad request", "error": "Error"}'
+          schema:
+            type: string
+      summary: Find orders
       tags:
       - Product
   /store:

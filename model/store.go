@@ -40,3 +40,12 @@ type OrderProduct struct {
 	Currency string  `form:"currency" json:"currency" xml:"currency" binding:"required"`
 	Price    float64 `form:"price" json:"price" xml:"price" binding:"required"`
 }
+
+type SearchProduct struct {
+	Keyword     string         `form:"keyword" json:"keyword" xml:"keyword" binding:"required"`
+	Page        int64          `form:"page" json:"page" xml:"page"`
+	Limit       int64          `form:"limit" json:"limit" xml:"limit"`
+	TotalPage   int64          `form:"total_page" json:"total_page" xml:"total_page" binding:"-"`
+	TotalRecord int64          `form:"total_record" json:"total_record" xml:"total_record" binding:"-"`
+	Products    []StoreProduct `form:"products" json:"products" xml:"products" `
+}

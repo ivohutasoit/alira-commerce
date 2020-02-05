@@ -97,10 +97,11 @@ func (ctrl *Product) DetailHandler(c *gin.Context) {
 // @Tags Product
 // @Accept json
 // @Produce json
+// @Param search body model.SearchProduct true "Store product search"
 // @Param Authorization header string true "Bearer [accessing token]"
 // @Success 200 {string} string "{"code": 200, "status": "OK", "message": "Success", "data": "data"}"
 // @Failure 400 {string} string "{"code": 400, "status": "Bad request", "error": "Error"}"
-// @Router /order/search [post]
+// @Router /product/search [post]
 func (ctrl *Product) SearchHandler(c *gin.Context) {
 
 }
