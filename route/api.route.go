@@ -42,6 +42,7 @@ func (route *Api) Initialize(r *gin.Engine) {
 		productApi := api.Group("/product")
 		{
 			productApi.POST("", product.CreateHandler)
+			productApi.GET("/:id", product.DetailHandler)
 		}
 	}
 }

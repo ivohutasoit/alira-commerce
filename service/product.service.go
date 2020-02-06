@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -67,7 +68,7 @@ func (s *Product) Create(args ...interface{}) (map[interface{}]interface{}, erro
 		category = &commerce.StoreProductCategory{
 			StoreID: store.Model.ID,
 			Code:    strings.ToUpper(strings.TrimSpace(req.Category)),
-			Name: strings.Title(strings.TrimSpace(req.Category)),
+			Name:    strings.Title(strings.TrimSpace(req.Category)),
 		}
 		alira.GetConnection().Create(&category)
 	}
@@ -97,5 +98,58 @@ func (s *Product) Create(args ...interface{}) (map[interface{}]interface{}, erro
 	return map[interface{}]interface{}{
 		"message": "Product has been added",
 		"product": req,
+	}, nil
+}
+
+func (s *Product) Get(args ...interface{}) (map[interface{}]interface{}, error) {
+	if len(args) < 1 {
+		return nil, errors.New("not enough parameter")
+	}
+	id, ok := args[0].(string)
+	if !ok {
+		return nil, errors.New("plain text is not type string")
+	}
+	storeProduct := &commerce.StoreProduct{}
+	alira.GetConnection().Where("id = ?", id).First(&storeProduct)
+	if storeProduct.Model.ID == "" {
+		return nil, errors.New("invalid product")
+	}
+	product := &commerce.Product{}
+	alira.GetConnection().Where("id = ?", storeProduct.ProductID).First(&product)
+	if storeProduct.Model.ID == "" {
+		return nil, errors.New("unknown product")
+	}
+	detail := &messaging.StoreProduct{
+		ID:      storeProduct.Model.ID,
+		Code:    storeProduct.Code,
+		Barcode: product.Barcode,
+		Name:    storeProduct.Name,
+	}
+
+	store := &commerce.Store{}
+	alira.GetConnection().Where("id = ?", storeProduct.StoreID).First(&store)
+	category := &commerce.StoreProductCategory{}
+	alira.GetConnection().Where("id = ?", storeProduct.CategoryID).First(&category)
+	price := &commerce.StoreProductPrice{}
+	alira.GetConnection().Where("store_product_id = ?", storeProduct.ID).First(&price)
+
+	if store.ID != "" {
+		detail.Store = fmt.Sprintf("%s - %s", store.Code, store.Name)
+	}
+
+	if category.ID != "" {
+		detail.Category = fmt.Sprintf("%s - %s", category.Code, category.Name)
+	}
+
+	if price.ID != "" {
+		detail.Currency = price.Currency
+		detail.Unit = price.Unit
+		detail.BuyPrice = price.BuyPrice
+		detail.SellPrice = price.SellPrice
+		detail.Quantity = price.Quantity
+	}
+
+	return map[interface{}]interface{}{
+		"product": detail,
 	}, nil
 }

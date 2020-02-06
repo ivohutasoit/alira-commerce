@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ivohutasoit/alira-commerce/messaging"
 	"github.com/ivohutasoit/alira-commerce/model"
 	"github.com/ivohutasoit/alira-commerce/service"
 )
@@ -84,11 +85,38 @@ func (ctrl *Product) ListHandler(c *gin.Context) {
 // @Produce json
 // @Param id path string true "product id or barcode"
 // @Param Authorization header string true "Bearer [accessing token]"
-// @Success 200 {string} string "{"code": 200, "status": "OK", "message": "Success", "data": "data"}"
+// @Success 200 {string} string "{"code": 200, "status": "OK", "data": "data"}"
 // @Failure 400 {string} string "{"code": 400, "status": "Bad request", "error": "Error"}"
 // @Router /product/{id} [get]
 func (ctrl *Product) DetailHandler(c *gin.Context) {
+	api := strings.Contains(c.Request.URL.Path, os.Getenv("URL_API"))
+	var id string
+	if api {
+		id = c.Param("id")
+	}
 
+	ps := &service.Product{}
+	data, err := ps.Get(id)
+	if err != nil {
+		if api {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+				"code":   http.StatusNotFound,
+				"status": http.StatusText(http.StatusNotFound),
+				"error":  err.Error(),
+			})
+			return
+		}
+	}
+
+	product := data["product"].(*messaging.StoreProduct)
+	if api {
+		c.JSON(http.StatusOK, gin.H{
+			"code":   http.StatusOK,
+			"status": http.StatusText(http.StatusOK),
+			"data":   product,
+		})
+		return
+	}
 }
 
 // SearchHandler godoc
